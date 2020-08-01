@@ -1,0 +1,29 @@
+<% if (email) { %>
+  <%- include('../../views/templates/header.ejs'); %>
+<% } else { %>
+    <%- include('../../views/templates/headerno.ejs'); %>
+<% } %>
+
+  <!-- Page Heading -->
+  <h1 class="mb-4 mt-4"><%= title %></h1>
+
+
+  <div class="row">
+    <!-- card -->
+    <div class="col-lg-6">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">How to add new languages</h6>
+        </div>
+        <div class="card-body">
+          <% if (email ) { %>
+          <p>your email = <%= email %></p>
+          <% } %>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+<%- include('../../views/templates/footer.ejs'); -%>

@@ -1,0 +1,60 @@
+<%- include('templates/header.ejs'); -%>
+  <!-- Page Heading -->
+  <h1 class="mb-4 mt-4"><%= title %></h1>
+
+  <div class="row">
+
+    <!-- Stripe card -->
+    <div class="col-lg-6">
+
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Subscription</h6>
+        </div>
+
+        <div class="card-body">
+          <% if (subscriptionActive) { %>
+            <p>You subscribed! here is your email <%= email %></p>
+            <% } else { %>
+              <p>This is just a test! Don't buy anything here...</p>
+
+              <!-- Stripe API here -->
+              <button onclick="gotoCheckout()" class="btn btn-primary btn-xl js-scroll-trigger">Subscribe here</button>
+            <% } %>
+
+            <script src="https://js.stripe.com/v3/"></script>
+
+            <script>
+              var stripe = Stripe('<%= STRIPE_PUBLIC_KEY %>');
+              function gotoCheckout() {
+                stripe.redirectToCheckout({
+                  // Make the id field from the Checkout Session creation API response
+                  // available to this file, so you can provide it as argument here
+                  // instead of the {{CHECKOUT_SESSION_ID}} placeholder.
+                  sessionId: '<%= sessionId %>'
+                }).then(function (result) {
+                  // If `redirectToCheckout` fails due to a browser or network
+                  // error, display the localized error message to your customer
+                  // using `result.error.message`.
+                });
+              };
+            </script>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Subscription instructions card -->
+      <div class="col-lg-6">
+        <div class="card shadow mb-4">
+          <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">How to get my library?</h6>
+          </div>
+          <div class="card-body">
+            <p>In this windows will be explainained how to procede to start learning</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<%- include('templates/footer.ejs'); -%>

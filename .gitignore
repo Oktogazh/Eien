@@ -1,0 +1,11 @@
+#ignore the environmentable variables
+.env
+
+#ignore too heavy files in the assets directory
+/assets
+
+#ignore the database
+/DataBase
+
+#ignore the node_modules folder
+/node_modules

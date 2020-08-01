@@ -1,0 +1,204 @@
+var createError = require('http-errors');
+var express = require('express');
+var path = require('path');
+var cookieParser = require('cookie-parser');
+var logger = require('morgan');
+var mongoose = require('mongoose');
+require('./models');
+var bcrypt = require('bcrypt');
+var expressSession = require('express-session');
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+var dotenv = require('dotenv');
+dotenv.config();
+
+var User = mongoose.model('User');
+
+// Set your secret key. Remember to switch to your live secret key in production!
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
+
+mongoose.connect('mongodb://localhost:27017/mydb', { useNewUrlParser: true, useUnifiedTopology: true });
+
+var app = express();
+
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+
+// create a path to serve static files
+app.use("/traouegezh", express.static(path.join(__dirname, "assets")));
+
+// Use body-parser to retrieve the raw body as a buffer
+const bodyParser = require('body-parser');
+
+// Match the raw body to content type application/json
+app.post('/webhooks', bodyParser.raw({type: 'application/json'}), (request, response) => {
+  const sig = request.headers['stripe-signature'];
+
+  let event;
+
+  try {
+    event = stripe.webhooks.constructEvent(request.body, sig, process.env.ENDPOINT_SECRET);
+  } catch (err) {
+    return response.status(400).send(`Webhook Error: ${err.message}`);
+  }
+
+  // Handle the checkout.session.completed event
+  if (event.type === 'checkout.session.completed') {
+    const session = event.data.object;
+
+    //Fulfill the purchase...
+    console.log(session);
+    User.findOne({
+      email: session.customer_email
+    }, function(err, user) {
+      if (user) {
+        user.subscriptionActive = true;
+        user.subscriptionId = session.subscription;
+        user.customerId = session.customer;
+        user.save();
+      }
+    });
+  }
+
+  // Return a response to acknowledge receipt of the event
+  response.json({received: true});
+});
+
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(expressSession({
+    secret: process.env.EXPRESS_SESSION_SECRET
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(new LocalStrategy({
+    usernameField: 'email',
+    passwordField: 'password',
+}, function(email, password, next) {
+  User.findOne({
+    email: email
+  }, function(err, user) {
+    if (err) return next(err);
+    if (!user || !bcrypt.compareSync(password, user.passwordHash)) {
+      return next({message: 'Email or password incorrect!'})
+    }
+    next(null, user);
+  })
+}));
+
+passport.use('signup-local', new LocalStrategy({
+    usernameField: 'email',
+    passwordField: 'password',
+}, function(email, password, next) {
+  User.findOne({
+    email: email
+  }, function (err, user) {
+    if (err) return next(err);
+    if (user) return next({message: "This address has already an account related to it!"});
+    let newUser = new User({
+      email: email,
+      passwordHash: bcrypt.hashSync(password, 10)
+    });
+    newUser.save(function(err) {
+      next(err, newUser);
+    });
+  });
+}));
+
+passport.serializeUser(function(user, next) {
+  next(null, user._id);
+});
+
+passport.deserializeUser(function(id, next) {
+  User.findById(id, function(err, user){
+    next(err, user);
+  });
+});
+
+app.get('/', function(req, res, next) {
+  res.render('index', {title: "Eien"})
+});
+
+app.post('/signup',
+  passport.authenticate('signup-local', { failureRedirect: '/' }),
+  function(req, res) {
+    res.redirect('/penn');
+  }
+);
+
+app.get('/penn', function(req, res, next) {
+  let userEmail = req.user? req.user.email : null;
+  res.render('main/main', {title: "Eien", email: userEmail})
+});
+
+app.get('/login', function(req, res, next) {
+  res.render('login', {title: "Login - Eien"});
+});
+
+app.post('/login',
+  passport.authenticate('local', { failureRedirect: '/login' }),
+  function(req, res) {
+    res.redirect('/penn');
+  }
+);
+
+app.get('/logout', function(req, res, next) {
+  req.logout();
+  res.redirect('/');
+});
+
+app.get('/bretonffr', function(req, res, next) {
+  let userEmail = req.user? req.user.email : null
+  res.render('demobrffr', {title: "Demo Dreton - Eien", email: userEmail})
+});
+
+app.get('/ouzhpenn', function(req, res, next) {
+  let userEmail = req.user? req.user.email : null
+  res.render('newLanguage', {title: 'New Language', email: userEmail})
+});
+
+app.get('/stal', function(req, res, next) {
+  const session = stripe.checkout.sessions.create({
+    customer_email: req.user.email,
+    payment_method_types: ['card'],
+    line_items: [{
+      price: process.env.STRIPE_PRICE,
+      quantity: 1,
+    }],
+    mode: 'subscription',
+    success_url: 'http://' + process.env.APP_HOST + '/penn?session_id={CHECKOUT_SESSION_ID}',
+    cancel_url: 'http://' + process.env.APP_HOST + '/stal',
+  }, function(err, session) {
+      if (err) return next(err);
+      res.render('billing', {STRIPE_PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY,
+                              title: 'Magasin',
+                              sessionId: session.id,
+                              subscriptionActive: req.user.subscriptionActive,
+                              email: req.user.email})
+  });
+});
+
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  next(createError(404));
+});
+
+// error handler
+app.use(function(err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+  // render the error page
+  res.status(err.status || 500);
+  res.render('error');
+});
+
+module.exports = app;
