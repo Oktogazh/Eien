@@ -72,7 +72,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(expressSession({
-    secret: process.env.EXPRESS_SESSION_SECRET
+    secret: process.env.EXPRESS_SESSION_SECRET,
+    cookie: {maxAge: 31556952000000},
+
 }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -122,7 +124,7 @@ passport.deserializeUser(function(id, next) {
 });
 
 app.get('/', function(req, res, next) {
-  res.render('index', {title: "Eien"})
+  req.user? res.redirect('/penn') : res.render('index', {title: "Eien"});
 });
 
 app.post('/signup',
@@ -132,13 +134,14 @@ app.post('/signup',
   }
 );
 
+app.get('/login', function(req, res, next) {
+  res.render('login', {title: "Login - Eien"});
+});
+
 app.get('/penn', function(req, res, next) {
   let userEmail = req.user? req.user.email : null;
   res.render('main/main', {title: "Eien", email: userEmail})
-});
-
-app.get('/login', function(req, res, next) {
-  res.render('login', {title: "Login - Eien"});
+  console.log(req.user.id);
 });
 
 app.post('/login',
