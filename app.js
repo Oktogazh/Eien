@@ -25,6 +25,7 @@ var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+app.set('trust proxy', 1)
 
 // create a path to serve static files
 app.use("/traouegezh", express.static(path.join(__dirname, "assets")));
@@ -73,8 +74,11 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(expressSession({
     secret: process.env.EXPRESS_SESSION_SECRET,
-    cookie: {maxAge: 31556952000000},
-
+    saveUninitialized: true,
+    resave: true,
+    cookie: {maxAge: 31556952000000,
+      secure: true
+    },
 }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -203,5 +207,7 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+console.log("connected to: " + process.env.APP_HOST);
 
 module.exports = app;
