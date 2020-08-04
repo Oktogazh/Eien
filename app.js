@@ -63,6 +63,23 @@ app.post('/webhooks', bodyParser.raw({type: 'application/json'}), (request, resp
     });
   }
 
+  // Handle the customer.subscription.deleted construct event
+  if (event.type === 'customer.subscription.deleted') {
+    const endingSubscription = event.data.object;
+
+    //End the subscription...
+    console.log(endingSubscription);
+    User.findOne({
+      subscriptionId: endingSubscription.id
+    }, function(err, user) {
+      if (user) {
+        user.subscriptionActive = false;
+        user.subscriptionId = null;
+        user.save();
+      }
+    });
+  }
+
   // Return a response to acknowledge receipt of the event
   response.json({received: true});
 });
@@ -179,16 +196,23 @@ app.get('/stal', function(req, res, next) {
       quantity: 1,
     }],
     mode: 'subscription',
-    success_url: 'http://' + process.env.APP_HOST + '/penn?session_id={CHECKOUT_SESSION_ID}',
-    cancel_url: 'http://' + process.env.APP_HOST + '/stal',
+    success_url: 'https://' + process.env.APP_HOST + '/penn?session_id={CHECKOUT_SESSION_ID}',
+    cancel_url: 'https://' + process.env.APP_HOST + '/stal',
   }, function(err, session) {
-      if (err) return next(err);
-      res.render('billing', {STRIPE_PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY,
-                              title: 'Magasin',
-                              sessionId: session.id,
-                              subscriptionActive: req.user.subscriptionActive,
-                              email: req.user.email})
+    if (err) return next(err);
+    res.render('billing', {STRIPE_PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY,
+      title: 'Magasin',
+      sessionId: session.id,
+      subscriptionActive: req.user.subscriptionActive,
+      email: req.user.email,
+      subscriptionId: req.user.subscriptionId
+    })
   });
+});
+
+app.post('/unsubscribe', function(req, res, next) {
+  stripe.subscriptions.del(req.user.subscriptionId);
+  res.redirect('/stal');
 });
 
 

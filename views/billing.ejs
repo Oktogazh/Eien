@@ -9,37 +9,50 @@
 
       <div class="card shadow mb-4">
         <div class="card-header py-3">
-          <h6 class="m-0 font-weight-bold text-primary">Subscription</h6>
+          <h6 class="m-0 font-weight-bold text-primary">Abonnement</h6>
         </div>
 
         <div class="card-body">
           <% if (subscriptionActive) { %>
-            <p>You subscribed! here is your email <%= email %></p>
-            <% } else { %>
-              <p>This is just a test! Don't buy anything here...</p>
+            <p>
+              Merci de vous être abonné!
+              Lorsque vous souhaiterez vous désabonner,
+              vous n'aurez qu'à clicker sur "me désabonner" <br>
+              votre subId : <%= subscriptionId %>
+            </p>
+
+            <!-- Stripe cancelling subscription here -->
+            <form action="/unsubscribe" method="post">
+              <button class="btn btn-primary btn-xl js-scroll-trigger">Me désabonner</button>
+
+            </form>
+
+          <% } else { %>
+              <p>Ceci est just un test, n'essayer pas d'acheter quoi que soit ici.
+               Pour simuler une inscription, utilisez le numéro de carte <code>4242 4242 4242 4242</code>
+               avec n'importe quelle valeurs dans les autres champs.</p>
 
               <!-- Stripe API here -->
               <button onclick="gotoCheckout()" class="btn btn-primary btn-xl js-scroll-trigger">Subscribe here</button>
+
+              <script src="https://js.stripe.com/v3/"></script>
+
+              <script>
+                var stripe = Stripe('<%= STRIPE_PUBLIC_KEY %>');
+                function gotoCheckout() {
+                  stripe.redirectToCheckout({
+                    // Make the id field from the Checkout Session creation API response
+                    // available to this file, so you can provide it as argument here
+                    // instead of the {{CHECKOUT_SESSION_ID}} placeholder.
+                    sessionId: '<%= sessionId %>'
+                  }).then(function (result) {
+                    // If `redirectToCheckout` fails due to a browser or network
+                    // error, display the localized error message to your customer
+                    // using `result.error.message`.
+                  });
+                };
+              </script>
             <% } %>
-
-            <script src="https://js.stripe.com/v3/"></script>
-
-            <script>
-              var stripe = Stripe('<%= STRIPE_PUBLIC_KEY %>');
-              function gotoCheckout() {
-                stripe.redirectToCheckout({
-                  // Make the id field from the Checkout Session creation API response
-                  // available to this file, so you can provide it as argument here
-                  // instead of the {{CHECKOUT_SESSION_ID}} placeholder.
-                  sessionId: '<%= sessionId %>'
-                }).then(function (result) {
-                  // If `redirectToCheckout` fails due to a browser or network
-                  // error, display the localized error message to your customer
-                  // using `result.error.message`.
-                });
-              };
-            </script>
-
           </div>
         </div>
       </div>
