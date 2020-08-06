@@ -161,8 +161,8 @@ app.get('/login', function(req, res, next) {
 
 app.get('/penn', function(req, res, next) {
   let userEmail = req.user? req.user.email : null;
-  res.render('main/main', {title: "Eien", email: userEmail})
-  console.log(req.user.id);
+  res.render('main/main', {title: "Accueil", email: userEmail})
+  console.log(userEmail);
 });
 
 app.post('/login',
@@ -179,7 +179,8 @@ app.get('/logout', function(req, res, next) {
 
 app.get('/bretonffr', function(req, res, next) {
   let userEmail = req.user? req.user.email : null
-  res.render('demobrffr', {title: "Demo Dreton - Eien", email: userEmail})
+  res.render('demos/demobrffr', {title: "Demo Dreton - Eien", email: userEmail})
+  console.log(userEmail);
 });
 
 app.get('/ouzhpenn', function(req, res, next) {

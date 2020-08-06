@@ -9,17 +9,22 @@
 
 
   <div class="row">
-    <!-- card -->
+    <!-- Welcoming card -->
     <div class="col-lg-6">
       <div class="card shadow mb-4">
         <div class="card-header py-3">
-          <h6 class="m-0 font-weight-bold text-primary">How to add new languages</h6>
+          <h6 class="m-0 font-weight-bold text-primary">Cette version n'est ni définitive, ni stable,
+            merci de votre compréhension...</h6>
         </div>
         <div class="card-body">
           <% if (email ) { %>
-          <p>your email = <%= email %></p>
+          <p>Bienvenue ! <br> Ouais, qu'on se l'avoue, avec un compte ça change pas des masses...</p>
+          <% } else { %>
+          <p>Bienvenue dans le mode découverte,
+            toutes les fonctionnalités du site ne seront pas accessible dans ce mode.
+            Pour pouvoir vous abonner il vous faudra créer un compte. Juste à gauche.
+          </p>
           <% } %>
-
         </div>
       </div>
     </div>

@@ -1,0 +1,49 @@
+<% if (email) { %>
+  <%- include('../../views/templates/header.ejs'); %>
+<% } else { %>
+    <%- include('../../views/templates/headerno.ejs'); %>
+<% } %>
+
+  <!-- Page Heading -->
+  <h1 class="mb-4 mt-4">Demo</h1>
+
+  <div class="row">
+
+    <!-- Demo recordings card -->
+    <div class="col-lg-6">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Plus qu'un click pour apprendre le breton !</h6>
+        </div>
+        <div class="card-body">
+          <ul>
+            <li>Premier jour</li>
+            <li><audio src="traouegezh/enrolladennaoueg/demobrffr/01.wav" controls /></li>
+            <li>Deuxième jour</li>
+            <li><audio src="traouegezh/enrolladennaoueg/demobrffr/02.wav" controls /></li>
+            <li>Troisième jour</li>
+            <li><audio src="traouegezh/enrolladennaoueg/demobrffr/03.wav" controls /></li>
+            <li>Quatrième jour</li>
+            <li><audio src="traouegezh/enrolladennaoueg/demobrffr/04.wav" controls /></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Instructions card -->
+    <div class="col-lg-6">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Comment suivre la méthode ?</h6>
+        </div>
+        <div class="card-body">
+          <p>Comme la cognac, matin, midi et soir...
+          <br>
+          Même si le cognac ne vous retournera jamais autant le cerveau.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+<%- include('../../views/templates/footer.ejs'); -%>
