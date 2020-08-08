@@ -22,6 +22,10 @@
 
 <body class="bg-gradient-primary">
 
+  <% if (errorMessage.length > 0) { %>
+  <div class="container errorText">Aucun compte relié à cette adresse n'a été trouvé, <br> vérifiez l'adresse ou retournez à <a href="<%= errorMessage %>">l'index</a> pour vous inscrire</div>
+  <% } %>
+
   <div class="container">
 
     <!-- Outer Row -->

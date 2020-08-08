@@ -1,6 +1,7 @@
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
+var flash = require('connect-flash');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var mongoose = require('mongoose');
@@ -10,6 +11,9 @@ var expressSession = require('express-session');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var dotenv = require('dotenv');
+var async = require('async');
+var nodemailer = require('nodemailer');
+var crypto = require('crypto');
 dotenv.config();
 
 var User = mongoose.model('User');
@@ -99,6 +103,7 @@ app.use(expressSession({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(flash());
 
 passport.use(new LocalStrategy({
     usernameField: 'email',
@@ -109,7 +114,7 @@ passport.use(new LocalStrategy({
   }, function(err, user) {
     if (err) return next(err);
     if (!user || !bcrypt.compareSync(password, user.passwordHash)) {
-      return next({message: 'Email or password incorrect!'})
+      return next({message: 'Mot de passe ou adresse mail incorrecte !'})
     }
     next(null, user);
   })
@@ -123,7 +128,7 @@ passport.use('signup-local', new LocalStrategy({
     email: email
   }, function (err, user) {
     if (err) return next(err);
-    if (user) return next({message: "This address has already an account related to it!"});
+    if (user) return next({message: "Cette adresse mail est déjà relié à un compte !"});
     let newUser = new User({
       email: email,
       passwordHash: bcrypt.hashSync(password, 10)
@@ -159,17 +164,6 @@ app.get('/login', function(req, res, next) {
   res.render('login', {title: "Connexion - Eien"});
 });
 
-app.get('/ger-kuzh', function(req, res, next) {
-  res.render('forgot', {title: "Mot de passe oublié - Eien"});
-});
-
-
-app.get('/penn', function(req, res, next) {
-  let userEmail = req.user? req.user.email : null;
-  res.render('main/main', {title: "Accueil", email: userEmail})
-  console.log(userEmail);
-});
-
 app.post('/login',
   passport.authenticate('local', { failureRedirect: '/login' }),
   function(req, res) {
@@ -177,55 +171,35 @@ app.post('/login',
   }
 );
 
-app.post('/ger-kuzh', function (req, res) {
-   const email = req.body.email
-   User
-       .findOne({
-           where: {email: email},//checking if the email address sent by client is present in the db(valid)
-       })
-       .then(function (user) {
-           if (!user) {
-               return throwFailed(res, 'No user found with that email address.')
-           }
-           ResetPassword
-               .findOne({
-                   where: {userId: user.id, status: 0},
-               }).then(function (resetPassword) {
-               if (resetPassword)
-                   resetPassword.destroy({
-                       where: {
-                           id: resetPassword.id
-                       }
-                   })
-               token = crypto.randomBytes(32).toString('hex')//creating the token to be sent to the forgot password form (react)
-               bcrypt.hash(token, null, null, function (err, hash) {//hashing the password to store in the db node.js
-                   ResetPassword.create({
-                       userId: user.id,
-                       resetPasswordToken: hash,
-                       expire: moment.utc().add(config.tokenExpiry, 'seconds'),
-                   }).then(function (item) {
-                       if (!item)
-                           return throwFailed(res, 'Oops problem in creating new password record')
-                       let mailOptions = {
-                           from: '"<jyothi pitta>" jyothi.pitta@ktree.us',
-                           to: user.email,
-                           subject: 'Reset your account password',
-                           html: '<h4><b>Reset Password</b></h4>' +
-                           '<p>To reset your password, complete this form:</p>' +
-                           '<a href=' + config.clientUrl + 'reset/' + user.id + '/' + token + '">' + config.clientUrl + 'reset/' + user.id + '/' + token + '</a>' +
-                           '<br><br>' +
-                           '<p>--Team</p>'
-                       }
-                       let mailSent = sendMail(mailOptions)//sending mail to the user where he can reset password.User id and the token generated are sent as params in a link
-                       if (mailSent) {
-                           return res.json({success: true, message: 'Check your mail to reset your password.'})
-                       } else {
-                           return throwFailed(error, 'Unable to send email.');
-                       }
-                   })
-               })
-           });
-       })
+//Forgot password
+app.get('/ger-kuzh', function(req, res, next) {
+  res.render('forgot', {title: "Mot de passe oublié - Eien", errorMessage: req.flash('error') || false });
+});
+
+app.post('/ger-kuzh', function (req, res, next) {
+  async.waterfall([
+    function(done) {
+      crypto.randomBytes(36, function(err, buf){
+        var token = buf.toString('hex');
+        done(err, token);
+      });
+    },
+    function(token, done){
+      User.findOne({email: req.body.email}, function(err, user) {
+        if (!user) {
+          req.flash('error', process.env.APP_HOST);
+          res.redirect('/ger-kuzh')
+        }
+      });
+    }
+
+  ])
+});
+
+app.get('/penn', function(req, res, next) {
+  let userEmail = req.user? req.user.email : null;
+  res.render('main/main', {title: "Accueil", email: userEmail})
+  console.log(userEmail);
 });
 
 app.get('/logout', function(req, res, next) {
