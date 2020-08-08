@@ -176,11 +176,12 @@ app.get('/ger-kuzh', function(req, res, next) {
   res.render('forgot', {title: "Mot de passe oublié - Eien", errorMessage: req.flash('error') || false });
 });
 
+//Handles the submitted form from the
 app.post('/ger-kuzh', function (req, res, next) {
   async.waterfall([
     function(done) {
       crypto.randomBytes(36, function(err, buf){
-        var token = buf.toString('hex');
+        const token = buf.toString('hex');
         done(err, token);
       });
     },
@@ -189,11 +190,46 @@ app.post('/ger-kuzh', function (req, res, next) {
         if (!user) {
           req.flash('error', process.env.APP_HOST);
           res.redirect('/ger-kuzh')
+        } else {
+          user.ResetPassword = token;
+          user.ResetPasswordExpire = Date.now() + 3600000;  //one hour
+
+          user.save(function(err) {
+            done(err, token, user);
+          });
         }
       });
+    },
+    function(token, user, done) {
+      var sntpTransport = nodemailer.createTransport({
+        service: 'Gmail',
+        auth: {
+          user: process.env.EMAIL_ADDRESS,
+          pass: process.env.EMAIL_PASSWORD
+        }
+      });
+      var mailOptions = {
+        to: user.email,
+        from: process.env.EMAIL_ADDRESS,
+        subject: 'Réinitialiser mon mot de passe',
+        text: 'Vous recevez ce mail car vous, ou une autre personne,' +
+        'a demandé une reinitialisation du mot de passe de votre compte Eien.' +
+        '\nSi vous n\'êtes pas à l\'origine de cette procédure,' +
+        'contentez vous d\'ignorer ce message.' +
+        'Si vous avez bien demandé une réinitialitialisation de votre mot de passe,' +
+        'veuillez suivre ce lien pour compléter la procédure: \n \n' +
+        'https://www.' + process.env.APP_HOST + '/nevez/' + token + '\n \n'
+      };
+      sntpTransport.sendMail(mailOptions, function(err){
+        console.log('reset password email sent');
+        req.flash('success', 'Un email vient d\'être envoyé à' + user.email + 'pour finaliser la procédure');
+        done(err, 'done');
+      });
     }
-
-  ])
+  ], function(err) {
+    if (err) return next(err);
+    res.redirect('/ger-kuzh');
+  });
 });
 
 app.get('/penn', function(req, res, next) {
