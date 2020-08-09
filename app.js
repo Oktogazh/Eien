@@ -177,7 +177,10 @@ app.get('/ger-kuzh', function(req, res, next) {
 });
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 //Handles the form submitted in forgot.ejs, send and reset email
+=======
+>>>>>>> parent of 21ba01d... creating the reset password functionality with pain
 =======
 >>>>>>> parent of 21ba01d... creating the reset password functionality with pain
 app.post('/ger-kuzh', function (req, res, next) {
@@ -193,6 +196,7 @@ app.post('/ger-kuzh', function (req, res, next) {
         if (!user) {
           req.flash('error', process.env.APP_HOST);
           res.redirect('/ger-kuzh')
+<<<<<<< HEAD
         }
       });
 <<<<<<< HEAD
@@ -280,6 +284,13 @@ app.post('ger-kuzh/nevez/:token', function(req, res, next) {
   ],function(err) {
     res.redirect('/login');
   })
+=======
+        }
+      });
+    }
+
+  ])
+>>>>>>> parent of 21ba01d... creating the reset password functionality with pain
 });
 
 app.get('/penn', function(req, res, next) {
