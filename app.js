@@ -176,7 +176,10 @@ app.get('/ger-kuzh', function(req, res, next) {
   res.render('forgot', {title: "Mot de passe oublié - Eien", errorMessage: req.flash('error')});
 });
 
+<<<<<<< HEAD
 //Handles the form submitted in forgot.ejs, send and reset email
+=======
+>>>>>>> parent of 21ba01d... creating the reset password functionality with pain
 app.post('/ger-kuzh', function (req, res, next) {
   async.waterfall([
     function(done) {
@@ -190,24 +193,9 @@ app.post('/ger-kuzh', function (req, res, next) {
         if (!user) {
           req.flash('error', process.env.APP_HOST);
           res.redirect('/ger-kuzh')
-        } else {
-          user.ResetPassword = token;
-          user.ResetPasswordExpire = Date.now() + 3600000;  //one hour
-
-          user.save(function(err) {
-            done(err, token, user);
-          });
         }
       });
-    },
-    function(token, user, done) {
-      var sntpTransport = nodemailer.createTransport({
-        service: 'Gmail',
-        auth: {
-          user: process.env.EMAIL_ADDRESS,
-          pass: process.env.EMAIL_PASSWORD
-        }
-      });
+<<<<<<< HEAD
       var mailOptions = {
         to: user.email,
         from: process.env.EMAIL_ADDRESS,
@@ -225,11 +213,11 @@ app.post('/ger-kuzh', function (req, res, next) {
         req.flash('success', 'Un email vient d\'être envoyé à' + user.email + 'pour finaliser la procédure');
         done(err, 'done');
       });
+=======
+>>>>>>> parent of 21ba01d... creating the reset password functionality with pain
     }
-  ], function(err) {
-    if (err) return next(err);
-    res.redirect('/ger-kuzh');
-  });
+
+  ])
 });
 
 //Reset the password
