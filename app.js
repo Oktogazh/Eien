@@ -10,7 +10,6 @@ var bcrypt = require('bcrypt');
 var expressSession = require('express-session');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-var localMongoose = require('passport-local-mongoose')
 var dotenv = require('dotenv');
 var async = require('async');
 var nodemailer = require('nodemailer');
@@ -18,7 +17,6 @@ var crypto = require('crypto');
 dotenv.config();
 
 var User = mongoose.model('User');
-User.plugin(localMongoose);
 
 // Set your secret key. Remember to switch to your live secret key in production!
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
