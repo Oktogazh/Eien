@@ -176,13 +176,8 @@ app.get('/ger-kuzh', function(req, res, next) {
   res.render('forgot', {title: "Mot de passe oublié - Eien", errorMessage: req.flash('error')});
 });
 
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 //Handles the form submitted in forgot.ejs, send and reset email
-=======
->>>>>>> parent of 21ba01d... creating the reset password functionality with pain
-=======
->>>>>>> parent of 21ba01d... creating the reset password functionality with pain
 app.post('/ger-kuzh', function (req, res, next) {
   async.waterfall([
     function(done) {
@@ -196,10 +191,8 @@ app.post('/ger-kuzh', function (req, res, next) {
         if (!user) {
           req.flash('error', process.env.APP_HOST);
           res.redirect('/ger-kuzh')
-<<<<<<< HEAD
         }
       });
-<<<<<<< HEAD
       var mailOptions = {
         to: user.email,
         from: process.env.EMAIL_ADDRESS,
@@ -217,8 +210,6 @@ app.post('/ger-kuzh', function (req, res, next) {
         req.flash('success', 'Un email vient d\'être envoyé à' + user.email + 'pour finaliser la procédure');
         done(err, 'done');
       });
-=======
->>>>>>> parent of 21ba01d... creating the reset password functionality with pain
     }
 
   ])
@@ -243,54 +234,10 @@ app.post('ger-kuzh/nevez/:token', function(req, res, next) {
           req.flash('message', 'invalid token');
           return res.redirect('..');
         }
-        if( req.body.password === req.body.confirm ) {
-          user.setPassword(req.body.password, function(err){
-            user.ResetPassword = undefined;
-            user.ResetPasswordExpire = undefined;
-
-            user.save(function(err) {
-              req.logIn(user, function(err) {
-                done(err, user);
-              });
-            });
-          })
-        } else {
-          req.flash ('message', 'not the same passwords');
-          res.redirect('/back');
-        }
-      });
-    },
-    function(user, done) {
-      var sntpTransport = nodemailer.createTransport({
-        service: 'Gmail',
-        auth: {
-          user: process.env.EMAIL_ADDRESS,
-          pass: process.env.EMAIL_PASSWORD
-        }
-      });
-      var mailOptions = {
-        to: user.email,
-        from: process.env.EMAIL_ADDRESS,
-        subject: 'Mot de passe Réinitialiser',
-        text: 'Félicitation, vous venez de réinitialiser votre mot de passe avec succès' +
-        'votre identifiant : \'' + req.body.email + '\'\n' +
-        'votre nouveau mot de passe : \'' + req.body.email + '\''
-      };
-      sntpTransport.sendMail(mailOptions, function(err){
-        console.log('new password confirmation sent');
-        done(err);
-      });
-    }
-  ],function(err) {
-    res.redirect('/login');
-  })
-=======
-        }
       });
     }
 
   ])
->>>>>>> parent of 21ba01d... creating the reset password functionality with pain
 });
 
 app.get('/penn', function(req, res, next) {
