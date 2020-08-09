@@ -10,6 +10,7 @@ var bcrypt = require('bcrypt');
 var expressSession = require('express-session');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+var localMongoose = require('passport-local-mongoose')
 var dotenv = require('dotenv');
 var async = require('async');
 var nodemailer = require('nodemailer');
@@ -17,6 +18,7 @@ var crypto = require('crypto');
 dotenv.config();
 
 var User = mongoose.model('User');
+User.plugin(localMongoose);
 
 // Set your secret key. Remember to switch to your live secret key in production!
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
@@ -173,15 +175,15 @@ app.post('/login',
 
 //Forgot password
 app.get('/ger-kuzh', function(req, res, next) {
-  res.render('forgot', {title: "Mot de passe oublié - Eien", errorMessage: req.flash('error') || false });
+  res.render('forgot', {title: "Mot de passe oublié - Eien", errorMessage: req.flash('error')});
 });
 
-//Handles the submitted form from the
+//Handles the form submitted in forgot.ejs, send and reset email
 app.post('/ger-kuzh', function (req, res, next) {
   async.waterfall([
     function(done) {
       crypto.randomBytes(36, function(err, buf){
-        const token = buf.toString('hex');
+        var token = buf.toString('hex');
         done(err, token);
       });
     },
@@ -213,12 +215,12 @@ app.post('/ger-kuzh', function (req, res, next) {
         from: process.env.EMAIL_ADDRESS,
         subject: 'Réinitialiser mon mot de passe',
         text: 'Vous recevez ce mail car vous, ou une autre personne,' +
-        'a demandé une reinitialisation du mot de passe de votre compte Eien.' +
+        'a demandé une réinitialisation du mot de passe de votre compte Eien.' +
         '\nSi vous n\'êtes pas à l\'origine de cette procédure,' +
         'contentez vous d\'ignorer ce message.' +
-        'Si vous avez bien demandé une réinitialitialisation de votre mot de passe,' +
+        'Si vous avez bien demandé une réinitialisation de votre mot de passe,' +
         'veuillez suivre ce lien pour compléter la procédure: \n \n' +
-        'https://www.' + process.env.APP_HOST + '/nevez/' + token + '\n \n'
+        process.env.APP_HOST + '/ger-kuzh/nevez/' + token + '\n \n'
       };
       sntpTransport.sendMail(mailOptions, function(err){
         console.log('reset password email sent');
@@ -230,6 +232,68 @@ app.post('/ger-kuzh', function (req, res, next) {
     if (err) return next(err);
     res.redirect('/ger-kuzh');
   });
+});
+
+//Reset the password
+app.get('/ger-kuzh/nevez/:token', function(req, res, next) {
+  User.findOne({ResetPassword : req.params.token, ResetPasswordExpire: { $gt: Date.now() } }, function(err, user) {
+    if (!user) {
+    req.flash('message', 'Token Expired or Invalid');
+    return res.redirect('/ger-kuzh');
+  }
+  res.render('reset', {title: "Réinitialisation du mot de passe - Eien", ResetPassword: req.params.token, message: req.flash('message'), host: process.env.APP_HOST });
+  })
+});
+
+app.post('ger-kuzh/nevez/:token', function(req, res, next) {
+  async.waterfall([
+    function(done) {
+      User.findOne({ResetPassword: req.params.token, ResetPasswordExpire: { $gt: Date.now() }}, function(err, user) {
+        if (!user) {
+          req.flash('message', 'invalid token');
+          return res.redirect('..');
+        }
+        if( req.body.password === req.body.confirm ) {
+          user.setPassword(req.body.password, function(err){
+            user.ResetPassword = undefined;
+            user.ResetPasswordExpire = undefined;
+
+            user.save(function(err) {
+              req.logIn(user, function(err) {
+                done(err, user);
+              });
+            });
+          })
+        } else {
+          req.flash ('message', 'not the same passwords');
+          res.redirect('/back');
+        }
+      });
+    },
+    function(user, done) {
+      var sntpTransport = nodemailer.createTransport({
+        service: 'Gmail',
+        auth: {
+          user: process.env.EMAIL_ADDRESS,
+          pass: process.env.EMAIL_PASSWORD
+        }
+      });
+      var mailOptions = {
+        to: user.email,
+        from: process.env.EMAIL_ADDRESS,
+        subject: 'Mot de passe Réinitialiser',
+        text: 'Félicitation, vous venez de réinitialiser votre mot de passe avec succès' +
+        'votre identifiant : \'' + req.body.email + '\'\n' +
+        'votre nouveau mot de passe : \'' + req.body.email + '\''
+      };
+      sntpTransport.sendMail(mailOptions, function(err){
+        console.log('new password confirmation sent');
+        done(err);
+      });
+    }
+  ],function(err) {
+    res.redirect('/login');
+  })
 });
 
 app.get('/penn', function(req, res, next) {
@@ -263,8 +327,8 @@ app.get('/stal', function(req, res, next) {
       quantity: 1,
     }],
     mode: 'subscription',
-    success_url: 'https://' + process.env.APP_HOST + '/penn?session_id={CHECKOUT_SESSION_ID}',
-    cancel_url: 'https://' + process.env.APP_HOST + '/stal',
+    success_url: process.env.APP_HOST + '/penn?session_id={CHECKOUT_SESSION_ID}',
+    cancel_url: process.env.APP_HOST + '/stal',
   }, function(err, session) {
     if (err) return next(err);
     res.render('billing', {STRIPE_PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY,
