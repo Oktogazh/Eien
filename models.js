@@ -16,7 +16,7 @@ var user = new Schema({
     subscriptionId: String
 }, {timestamps: true});
 
-user.plugin(passportLocalMongoose);
+user.plugin(passportLocalMongoose, { usernameField: 'email', });
 
 var User = mongoose.model('User', user)
 module.exports = User;

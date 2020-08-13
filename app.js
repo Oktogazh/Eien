@@ -21,7 +21,11 @@ dotenv.config();
 // Set your secret key. Remember to switch to your live secret key in production!
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
-mongoose.connect('mongodb://localhost:27017/mydb', { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true });
+mongoose.connect('mongodb://localhost:27017/mydb', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true
+});
 
 var app = express();
 
@@ -106,55 +110,29 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
-passport.use(new LocalStrategy({
-    usernameField: 'email',
-    passwordField: 'password'
-}, function(email, password, done) {
-  User.findOne({
-    email: email
-  }, function(err, user) {
-    if (err) return done(err);
-    if (!user || !bcrypt.compareSync(password, user.passwordHash)) {
-      return done({message: 'Mot de passe ou adresse mail incorrecte !'})
-    }
-    done(null, user);
-  })
-}));
-
-passport.use('signup-local', new LocalStrategy({
-    usernameField: 'email',
-    passwordField: 'password',
-}, function(email, password, done) {
-  User.findOne({
-    email: email
-  }, function (err, user) {
-    if (err) return done(err);
-    if (user) return done( null, false, {message: "Cette adresse mail est déjà relié à un compte !"});
-    let newUser = new User({
-      email: email,
-      passwordHash: bcrypt.hashSync(password, 10)
-    });
-    newUser.save(function(err) {
-      done(err, newUser);
-    });
-  });
-}));
-
+// use authenticate method of model in LocalStrategy
+passport.use(User.createStrategy());
 
 // use static serialize and deserialize of model for passport session support
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 app.get('/', function(req, res, next) {
-  req.user? res.redirect('/penn') : res.render('index', {title: "Eien"});
+  User? res.redirect('/penn') : res.render('index', {title: "Eien"});
 });
 
-app.post('/signup',
-  passport.authenticate('signup-local', { failureRedirect: '/' }),
-  function(req, res) {
+app.post('/signup', function(req, res, next) {
+  User.register(new User({email: req.body.email}), req.body.password, function(err) {
+    if (err) {
+      console.log('error while user register!', err);
+      return next(err);
+    }
+
+    console.log('user registered!');
+
     res.redirect('/penn');
-  }
-);
+  });
+});
 
 app.get('/login', function(req, res, next) {
   res.render('login', {title: "Connexion - Eien"});
@@ -291,7 +269,7 @@ app.post('ger-kuzh/nevez/:token', function(req, res, next) {
 });
 
 app.get('/penn', function(req, res, next) {
-  let userEmail = req.user? req.user.email : null;
+  let userEmail = User? User.email : null;
   res.render('main/main', {title: "Accueil", email: userEmail})
   console.log(userEmail);
 });
