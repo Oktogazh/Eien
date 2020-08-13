@@ -10,30 +10,24 @@ var bcrypt = require('bcrypt');
 var expressSession = require('express-session');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-<<<<<<< HEAD
-=======
 var localMongoose = require('passport-local-mongoose');
->>>>>>> index
+var passportLocalMongoose = require('passport-local-mongoose');
 var dotenv = require('dotenv');
 var async = require('async');
 var nodemailer = require('nodemailer');
 var crypto = require('crypto');
 dotenv.config();
 
-var User = mongoose.model('User');
-<<<<<<< HEAD
-
-=======
->>>>>>> index
 // Set your secret key. Remember to switch to your live secret key in production!
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
-
-mongoose.connect('mongodb://localhost:27017/mydb', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb://localhost:27017/mydb', { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true });
 
 var app = express();
 
-// view engine setup
+var User = mongoose.model('User');
+
+// some settings
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.set('trust proxy', 1)
@@ -98,14 +92,14 @@ app.post('/webhooks', bodyParser.raw({type: 'application/json'}), (request, resp
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(cookieParser(process.env.EXPRESS_SESSION_SECRET));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(expressSession({
     secret: process.env.EXPRESS_SESSION_SECRET,
     saveUninitialized: true,
     resave: true,
     cookie: {maxAge: 31556952000000,
-      secure: true
+      secure: false
     },
 }));
 app.use(passport.initialize());
@@ -114,47 +108,42 @@ app.use(flash());
 
 passport.use(new LocalStrategy({
     usernameField: 'email',
-    passwordField: 'password',
-}, function(email, password, next) {
+    passwordField: 'password'
+}, function(email, password, done) {
   User.findOne({
     email: email
   }, function(err, user) {
-    if (err) return next(err);
+    if (err) return done(err);
     if (!user || !bcrypt.compareSync(password, user.passwordHash)) {
-      return next({message: 'Mot de passe ou adresse mail incorrecte !'})
+      return done({message: 'Mot de passe ou adresse mail incorrecte !'})
     }
-    next(null, user);
+    done(null, user);
   })
 }));
 
 passport.use('signup-local', new LocalStrategy({
     usernameField: 'email',
     passwordField: 'password',
-}, function(email, password, next) {
+}, function(email, password, done) {
   User.findOne({
     email: email
   }, function (err, user) {
-    if (err) return next(err);
-    if (user) return next({message: "Cette adresse mail est déjà relié à un compte !"});
+    if (err) return done(err);
+    if (user) return done( null, false, {message: "Cette adresse mail est déjà relié à un compte !"});
     let newUser = new User({
       email: email,
       passwordHash: bcrypt.hashSync(password, 10)
     });
     newUser.save(function(err) {
-      next(err, newUser);
+      done(err, newUser);
     });
   });
 }));
 
-passport.serializeUser(function(user, next) {
-  next(null, user._id);
-});
 
-passport.deserializeUser(function(id, next) {
-  User.findById(id, function(err, user){
-    next(err, user);
-  });
-});
+// use static serialize and deserialize of model for passport session support
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 app.get('/', function(req, res, next) {
   req.user? res.redirect('/penn') : res.render('index', {title: "Eien"});
@@ -183,7 +172,6 @@ app.get('/ger-kuzh', function(req, res, next) {
   res.render('forgot', {title: "Mot de passe oublié - Eien", errorMessage: req.flash('error')});
 });
 
-
 //Handles the form submitted in forgot.ejs, send and reset email
 app.post('/ger-kuzh', function (req, res, next) {
   async.waterfall([
@@ -198,6 +186,22 @@ app.post('/ger-kuzh', function (req, res, next) {
         if (!user) {
           req.flash('error', process.env.APP_HOST);
           res.redirect('/ger-kuzh')
+        } else {
+          user.ResetPassword = token;
+          user.ResetPasswordExpire = Date.now() + 3600000;  //one hour
+
+          user.save(function(err) {
+            done(err, token, user);
+          });
+        }
+      });
+    },
+    function(token, user, done) {
+      var sntpTransport = nodemailer.createTransport({
+        service: 'Gmail',
+        auth: {
+          user: process.env.EMAIL_ADDRESS,
+          pass: process.env.EMAIL_PASSWORD
         }
       });
       var mailOptions = {
@@ -218,8 +222,10 @@ app.post('/ger-kuzh', function (req, res, next) {
         done(err, 'done');
       });
     }
-
-  ])
+  ], function(err) {
+    if (err) return next(err);
+    res.redirect('/ger-kuzh');
+  });
 });
 
 //Reset the password
@@ -241,10 +247,47 @@ app.post('ger-kuzh/nevez/:token', function(req, res, next) {
           req.flash('message', 'invalid token');
           return res.redirect('..');
         }
+        if( req.body.password === req.body.confirm ) {
+          user.setPassword(req.body.password, function(err){
+            user.ResetPassword = undefined;
+            user.ResetPasswordExpire = undefined;
+
+            user.save(function(err) {
+              req.logIn(user, function(err) {
+                done(err, user);
+              });
+            });
+          })
+        } else {
+          req.flash ('message', 'not the same passwords');
+          res.redirect('/back');
+        }
+      });
+    },
+    function(user, done) {
+      var sntpTransport = nodemailer.createTransport({
+        service: 'Gmail',
+        auth: {
+          user: process.env.EMAIL_ADDRESS,
+          pass: process.env.EMAIL_PASSWORD
+        }
+      });
+      var mailOptions = {
+        to: user.email,
+        from: process.env.EMAIL_ADDRESS,
+        subject: 'Mot de passe Réinitialiser',
+        text: 'Félicitation, vous venez de réinitialiser votre mot de passe avec succès' +
+        'votre identifiant : \'' + req.body.email + '\'\n' +
+        'votre nouveau mot de passe : \'' + req.body.email + '\''
+      };
+      sntpTransport.sendMail(mailOptions, function(err){
+        console.log('new password confirmation sent');
+        done(err);
       });
     }
-
-  ])
+  ],function(err) {
+    res.redirect('/login');
+  })
 });
 
 app.get('/penn', function(req, res, next) {
