@@ -6,9 +6,8 @@ var passportLocalMongoose = require('passport-local-mongoose');
 var user = new Schema({
     email: String,
     passwordHash: String,
-    ResetPassword: {
-      data: String,
-      default: ''},
+    ResetPassword: String,
+    ResetPasswordExpire: Date,
     subscriptionActive: {
       type: Boolean,
       default: false},

@@ -118,7 +118,7 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 app.get('/', function(req, res, next) {
-  User? res.redirect('/penn') : res.render('index', {title: "Eien"});
+  req.user? res.redirect('/penn') : res.render('index', {title: "Eien"});
 });
 
 app.post('/signup', function(req, res, next) {
@@ -134,8 +134,8 @@ app.post('/signup', function(req, res, next) {
   });
 });
 
-app.get('/login', function(req, res, next) {
-  res.render('login', {title: "Connexion - Eien"});
+app.get('/kevrea%C3%B1', function(req, res, next) {
+  req.user? res.redirect('/penn') : res.render('login', {title: "Connexion - Eien"});
 });
 
 app.post('/login',
@@ -217,13 +217,13 @@ app.get('/ger-kuzh/nevez/:token', function(req, res, next) {
   })
 });
 
-app.post('ger-kuzh/nevez/:token', function(req, res, next) {
+app.post('/ger-kuzh/nevez/:token', function(req, res, next) {
   async.waterfall([
     function(done) {
-      User.findOne({ResetPassword: req.params.token, ResetPasswordExpire: { $gt: Date.now() }}, function(err, user) {
+      User.findOne({ResetPassword: req.params.token, ResetPasswordExpire: { $gt: Date.now() } }, function(err, user) {
         if (!user) {
           req.flash('message', 'invalid token');
-          return res.redirect('..');
+          return res.redirect('back');
         }
         if( req.body.password === req.body.confirm ) {
           user.setPassword(req.body.password, function(err){
@@ -253,10 +253,10 @@ app.post('ger-kuzh/nevez/:token', function(req, res, next) {
       var mailOptions = {
         to: user.email,
         from: process.env.EMAIL_ADDRESS,
-        subject: 'Mot de passe Réinitialiser',
-        text: 'Félicitation, vous venez de réinitialiser votre mot de passe avec succès' +
-        'votre identifiant : \'' + req.body.email + '\'\n' +
-        'votre nouveau mot de passe : \'' + req.body.email + '\''
+        subject: 'Mot de passe réinitialisé',
+        text: 'Félicitation, vous venez de réinitialiser votre mot de passe avec succès!\n' +
+        'votre identifiant : \'' + user.email + '\'\n' +
+        'votre nouveau mot de passe : \'' + req.body.password + '\''
       };
       sntpTransport.sendMail(mailOptions, function(err){
         console.log('new password confirmation sent');
@@ -269,13 +269,13 @@ app.post('ger-kuzh/nevez/:token', function(req, res, next) {
 });
 
 app.get('/penn', function(req, res, next) {
-  let userEmail = User? User.email : null;
-  res.render('main/main', {title: "Accueil", email: userEmail})
+  let userEmail = req.user? req.user.email : null;
+  res.render('main/main', {title: "Accueil", email: userEmail});
   console.log(userEmail);
 });
 
 app.get('/logout', function(req, res, next) {
-  req.logout();
+  req.logOut();
   res.redirect('/');
 });
 

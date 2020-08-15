@@ -433,8 +433,9 @@ small,
 
 mark,
 .mark {
-  padding: 0.2em;
-  background-color: #fcf8e3;
+  padding: 0.3em;
+  background-color: rgba(152, 152, 152, 0.65);
+  border-radius: 0.5em;
 }
 
 .list-unstyled {
