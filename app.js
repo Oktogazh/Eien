@@ -135,14 +135,18 @@ app.post('/signup', function(req, res, next) {
 });
 
 app.get('/kevrea%C3%B1', function(req, res, next) {
-  req.user? res.redirect('/penn') : res.render('login', {title: "Connexion - Eien"});
+  let message = req.flash('error');
+  req.user? res.redirect('/penn') : res.render('login', {
+    title: "Connexion - Eien",
+    messagePassword: message,
+  });
 });
 
 app.post('/login',
-  passport.authenticate('local', { failureRedirect: '/login' }),
-  function(req, res) {
-    res.redirect('/penn');
-  }
+  passport.authenticate('local', {
+    successRedirect : '/penn',
+    failureRedirect: '/kevrea%C3%B1',
+    failureFlash : { type: 'error', message: 'Password' } }),
 );
 
 //Forgot password

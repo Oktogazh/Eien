@@ -86,7 +86,7 @@ h1, h2, h3, h4, h5, h6 {
 
 p {
   margin-top: 0;
-  margin-bottom: 1rem;
+  margin-bottom: 0rem;
 }
 
 abbr[title],
@@ -3215,7 +3215,7 @@ input[type=button].btn-block {
   display: block;
   padding: 0.5rem 1.5rem;
   margin-bottom: 0;
-  font-size: 0.875rem;
+  font-size: 1vh;
   color: #6c757d;
   white-space: nowrap;
 }
@@ -4164,7 +4164,7 @@ input[type=button].btn-block {
     padding-left: 0;
   }
 }
-@media (min-width: 992px) {
+@media (min-width: 20px) {
   .navbar-expand-lg {
     flex-flow: row nowrap;
     justify-content: flex-start;
@@ -4837,9 +4837,13 @@ a.badge-dark:focus, a.badge-dark.focus {
 }
 
 .alert {
-  position: relative;
-  padding: 0.75rem 1.25rem;
-  margin-bottom: 1rem;
+  position: absolute;
+  text-align: center;
+  top: 3.1rem;
+  left: 30%;
+  width: 40%;
+  padding: 0.75vh 1.25vw;
+  margin-bottom: 0.75vh;
   border: 1px solid transparent;
   border-radius: 0.25rem;
 }
@@ -4925,6 +4929,7 @@ a.badge-dark:focus, a.badge-dark.focus {
 
 .alert-danger {
   color: #721c24;
+  font-size: 1.5vmin;
   background-color: #f8d7da;
   border-color: #f5c6cb;
 }
@@ -10066,7 +10071,7 @@ hr.light {
 #mainNav .navbar-nav .nav-item .nav-link.active {
   color: rgba(67, 207, 88, 0.7) !important;
 }
-@media (min-width: 992px) {
+@media (min-width: 20px) {
   #mainNav {
     box-shadow: none;
     background-color: transparent;
@@ -10087,28 +10092,12 @@ hr.light {
   #mainNav .navbar-nav .nav-item:last-child .nav-link {
     padding-right: 0;
   }
-  #mainNav.navbar-scrolled {
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-    background-color: #fff;
-  }
-  #mainNav.navbar-scrolled .navbar-brand {
-    color: #212529;
-  }
-  #mainNav.navbar-scrolled .navbar-brand:hover {
-    color: rgba(67, 207, 88, 0.7);
-  }
-  #mainNav.navbar-scrolled .navbar-nav .nav-item .nav-link {
-    color: #212529;
-  }
-  #mainNav.navbar-scrolled .navbar-nav .nav-item .nav-link:hover {
-    color: rgba(67, 207, 88, 0.7);
-  }
 }
 
 header.masthead {
   padding-top: 10rem;
   padding-bottom: calc(10rem - 4.5rem);
-  background: linear-gradient(to bottom, rgba(170, 148, 132, 0.1) 0%, rgba(255, 255, 255, 0) 50%), url("../assets/img/Beg-ar-Van.jpg");
+  background: linear-gradient(to bottom, rgba(170, 148, 132, 0.1) 0%, rgba(255, 255, 255, 0) 50%), url("../assets/img/Beg_ar_Vann.jpg");
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: scroll;
