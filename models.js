@@ -10,7 +10,16 @@ var user = new Schema({
     ResetPasswordExpire: Date,
     subscriptionActive: {
       type: Boolean,
-      default: false},
+      default: false
+    },
+    languages: [{
+      name: String,
+      started: Date,
+      level: {
+        type: Number,
+        default: 0
+      }
+    }],
     customerId: String,
     subscriptionId: String
 }, {timestamps: true});

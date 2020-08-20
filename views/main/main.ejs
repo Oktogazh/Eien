@@ -1,3 +1,4 @@
+
 <% if (email) { %>
   <%- include('../../views/templates/header.ejs'); %>
 <% } else { %>
@@ -17,12 +18,12 @@
             merci de votre compréhension...</h6>
         </div>
         <div class="card-body">
-          <% if (email ) { %>
-          <p>Bienvenue ! <br> Ouais, qu'on se l'avoue, avec un compte ça change pas des masses...</p>
+          <% if (active === true) { %>
+          <p>Vous êtes abonné</p>
           <% } else { %>
-          <p>Bienvenue dans le mode découverte,
-            toutes les fonctionnalités du site ne seront pas accessible dans ce mode.
-            Pour pouvoir vous abonner il vous faudra créer un compte. Juste à gauche.
+          <p>Bienvenue, <br>
+            En mode découverte, vous ne pouvez qu'accéder au démonstration.
+            Pour un accès complet aux méthodes vous dever vous abonner.
           </p>
           <% } %>
         </div>

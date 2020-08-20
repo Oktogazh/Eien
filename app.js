@@ -274,7 +274,12 @@ app.post('/ger-kuzh/nevez/:token', function(req, res, next) {
 
 app.get('/penn', function(req, res, next) {
   let userEmail = req.user? req.user.email : null;
-  res.render('main/main', {title: "Accueil", email: userEmail});
+  let subscriptionActive = req.user? req.user.subscriptionActive : false;
+  res.render('main/main', {
+    title: "Accueil",
+    email: userEmail,
+    active: subscriptionActive,
+  });
   console.log(userEmail);
 });
 
