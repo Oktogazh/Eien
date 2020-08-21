@@ -8,8 +8,13 @@
   <!-- Page Heading -->
   <h1 class="mb-4 mt-4"><%= title %></h1>
 
+  <% if (newPassword.length > 0) { %>
+    <div class="alert alert-heading alert-success">
+      <p><strong>Mot de passe réinisialisé avec succès!</strong> <br> Félicitation, voici votre nouveau mot de passe: <%= newPassword %> <br> Notez-le bien puis réactualisez cette page pour éffacer ce message.<p/>
+    </div>
+  <% } %>
 
-  <div class="row">
+  <div class="row alert-position">
     <!-- Welcoming card -->
     <div class="col-lg-6">
       <div class="card shadow mb-4">
@@ -22,7 +27,7 @@
           <p>Vous êtes abonné</p>
           <% } else { %>
           <p>Bienvenue, <br>
-            En mode découverte, vous ne pouvez qu'accéder au démonstration.
+            En mode découverte, vous ne pouvez accéder qu'au démonstration.
             Pour un accès complet aux méthodes vous dever vous abonner.
           </p>
           <% } %>

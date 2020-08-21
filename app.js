@@ -135,6 +135,7 @@ app.post('/signup', function(req, res, next) {
 });
 
 app.get('/kevrea%C3%B1', function(req, res, next) {
+  if (req.user) return res.redirect('/penn');
   let message = req.flash('error');
   req.user? res.redirect('/penn') : res.render('login', {
     title: "Connexion - Eien",
@@ -268,7 +269,8 @@ app.post('/ger-kuzh/nevez/:token', function(req, res, next) {
       });
     }
   ],function(err) {
-    res.redirect('/login');
+    req.flash('password', req.body.password);
+    res.redirect('/penn');
   })
 });
 
@@ -279,6 +281,7 @@ app.get('/penn', function(req, res, next) {
     title: "Accueil",
     email: userEmail,
     active: subscriptionActive,
+    newPassword: req.flash('password') || null,
   });
   console.log(userEmail);
 });
