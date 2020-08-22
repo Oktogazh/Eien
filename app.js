@@ -37,7 +37,7 @@ app.set('view engine', 'ejs');
 app.set('trust proxy', 1)
 
 // create a path to serve static files
-app.use("/traouegezh", express.static(path.join(__dirname, "assets")));
+app.use("/traouegezh", express.static(path.join(__dirname, "/assets/public")));
 
 // Use body-parser to retrieve the raw body as a buffer
 const bodyParser = require('body-parser');
@@ -245,27 +245,6 @@ app.post('/ger-kuzh/nevez/:token', function(req, res, next) {
           req.flash ('message', 'not the same passwords');
           res.redirect('/back');
         }
-      });
-    },
-    function(user, done) {
-      var sntpTransport = nodemailer.createTransport({
-        service: 'Gmail',
-        auth: {
-          user: process.env.EMAIL_ADDRESS,
-          pass: process.env.EMAIL_PASSWORD
-        }
-      });
-      var mailOptions = {
-        to: user.email,
-        from: process.env.EMAIL_ADDRESS,
-        subject: 'Mot de passe réinitialisé',
-        text: 'Félicitation, vous venez de réinitialiser votre mot de passe avec succès!\n' +
-        'votre identifiant : \'' + user.email + '\'\n' +
-        'votre nouveau mot de passe : \'' + req.body.password + '\''
-      };
-      sntpTransport.sendMail(mailOptions, function(err){
-        console.log('new password confirmation sent');
-        done(err);
       });
     }
   ],function(err) {
