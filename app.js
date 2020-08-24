@@ -118,7 +118,22 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 app.get('/', function(req, res, next) {
-  req.user? res.redirect('/penn') : res.render('index', {title: "Eien"});
+  let message = req.flash('error');
+  req.user? res.redirect('/penn') : res.render('login', {
+    title: "Eienn",
+    messagePassword: message,
+  });
+});
+
+app.post('/login',
+  passport.authenticate('local', {
+    successRedirect : '/penn',
+    failureRedirect: '/',
+    failureFlash : { type: 'error', message: 'Password' } }),
+);
+
+app.get('/nevez', function(req, res, next) {
+  req.user? res.redirect('/penn') : res.render('signup', {title: "Eienn"});
 });
 
 app.post('/signup', function(req, res, next) {
@@ -133,22 +148,6 @@ app.post('/signup', function(req, res, next) {
     res.redirect('/penn');
   });
 });
-
-app.get('/kevrea%C3%B1', function(req, res, next) {
-  if (req.user) return res.redirect('/penn');
-  let message = req.flash('error');
-  req.user? res.redirect('/penn') : res.render('login', {
-    title: "Connexion - Eien",
-    messagePassword: message,
-  });
-});
-
-app.post('/login',
-  passport.authenticate('local', {
-    successRedirect : '/penn',
-    failureRedirect: '/kevrea%C3%B1',
-    failureFlash : { type: 'error', message: 'Password' } }),
-);
 
 //Forgot password
 app.get('/ger-kuzh', function(req, res, next) {
