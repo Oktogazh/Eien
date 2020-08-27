@@ -1,5 +1,6 @@
 var createError = require('http-errors');
 var express = require('express');
+var favicon = require('serve-favicon');
 var path = require('path');
 var flash = require('connect-flash');
 var cookieParser = require('cookie-parser');
@@ -32,9 +33,10 @@ var app = express();
 var User = mongoose.model('User');
 
 // some settings
+app.set('case sensitive routing', true);
 app.set('views', path.join(__dirname, 'views'));
+app.set('trust proxy', 1);
 app.set('view engine', 'ejs');
-app.set('trust proxy', 1)
 
 // create a path to serve static files
 app.use("/traouegezh", express.static(path.join(__dirname, "/assets/public")));
@@ -93,6 +95,7 @@ app.post('/webhooks', bodyParser.raw({type: 'application/json'}), (request, resp
   response.json({received: true});
 });
 
+app.use(favicon(path.join(__dirname, 'public/css', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
