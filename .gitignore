@@ -2,7 +2,7 @@
 .env
 
 #ignore too heavy files in the assets directory
-/assets
+/media
 
 #ignore the database
 /DataBase

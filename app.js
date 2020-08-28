@@ -38,8 +38,6 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('trust proxy', 1);
 app.set('view engine', 'ejs');
 
-// create a path to serve static files
-app.use("/traouegezh", express.static(path.join(__dirname, "/assets/public")));
 
 // Use body-parser to retrieve the raw body as a buffer
 const bodyParser = require('body-parser');
@@ -101,6 +99,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.EXPRESS_SESSION_SECRET));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use("/traouegezh", express.static(path.join(__dirname, "/assets/public")));
 app.use(expressSession({
     secret: process.env.EXPRESS_SESSION_SECRET,
     saveUninitialized: true,
@@ -122,8 +121,10 @@ passport.deserializeUser(User.deserializeUser());
 
 app.get('/', function(req, res, next) {
   let message = req.flash('error');
+  let already = req.flash('alreadyAnAccount');
   req.user? res.redirect('/penn') : res.render('login', {
     title: "Eienn",
+    already: already,
     messagePassword: message,
   });
 });
@@ -140,16 +141,22 @@ app.get('/nevez', function(req, res, next) {
 });
 
 app.post('/signup', function(req, res, next) {
-  User.register(new User({email: req.body.email}), req.body.password, function(err) {
-    if (err) {
-      console.log('error while user register!', err);
-      return next(err);
-    }
+  if (User.findOne({email: req.body.email}, function(err, user) {
+    if (user) return true;
+  })) {
+    return res.req.flash('alreadyAnAccount', 'this address is already used') && res.redirect('/');
+  } else {
+    User.register(new User({email: req.body.email}), req.body.password, function(err) {
+      if (err) {
+        console.log('error while user register!', err);
+        return next(err);
+      }
 
-    console.log('user registered!');
+      console.log('user registered!');
 
-    res.redirect('/penn');
-  });
+      res.redirect('/penn');
+    });
+  }
 });
 
 //Forgot password

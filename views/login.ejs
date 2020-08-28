@@ -21,7 +21,14 @@
       <!-- Flash messages -->
       <% if (messagePassword.length > 0) { %>
         <div class="alert alert-heading alert-danger">
-          <p><strong>Mauvais identifiants !</strong> <br> L'adresse ou le mot de passe que vous vennez d'entrer n'ont pas permis de vous identifier. <br> Vérifiez vos identifiants ou bien <a href="/">inscrivez</a>-vous.<p/>
+          <p><strong>Mauvais identifiants !</strong> <br> L'adresse ou le mot de passe que vous vennez d'entrer n'ont pas permis de vous identifier. <br> Vérifiez vos identifiants ou bien <a href="/nevez">inscrivez</a>-vous.<p/>
+        </div>
+      <% } %>
+      <% if (already.length > 0) { %>
+        <div class="alert alert-heading alert-danger">
+          <p><strong>Déjà un compte ?</strong> <br> L'adresse que vous venez d'utiliser est déjà reliée à un compte. <br>
+            Tentez de vous connecter, vous pouvez aussi réinitialiser votre mot de passe en cas d'oublis, <br>
+            ou bien réessayez de vous <a href="/nevez">inscrire</a> avec une autre adresse email.<p/>
         </div>
       <% } %>
       <!-- Navigation-->
