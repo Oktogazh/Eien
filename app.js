@@ -239,7 +239,7 @@ app.post('/ger-kuzh/nevez/:token', function(req, res, next) {
           req.flash('message', 'invalid token');
           return res.redirect('back');
         }
-        if( req.body.password === req.body.confirm ) {
+        if (req.body.password === req.body.confirm) {
           user.setPassword(req.body.password, function(err){
             user.ResetPassword = undefined;
             user.ResetPasswordExpire = undefined;
@@ -252,7 +252,7 @@ app.post('/ger-kuzh/nevez/:token', function(req, res, next) {
           })
         } else {
           req.flash ('message', 'not the same passwords');
-          res.redirect('/back');
+          res.redirect(`/ger-kuzh/nevez/${req.params.token}`);
         }
       });
     }
