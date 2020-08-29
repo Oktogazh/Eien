@@ -14,6 +14,8 @@ var user = new Schema({
     },
     languages: [{
       name: String,
+      dialect: String,
+      begins: Boolean,
       started: Date,
       level: {
         type: Number,

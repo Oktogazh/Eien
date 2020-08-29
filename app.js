@@ -12,7 +12,6 @@ var expressSession = require('express-session');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var localMongoose = require('passport-local-mongoose');
-var passportLocalMongoose = require('passport-local-mongoose');
 var dotenv = require('dotenv');
 var async = require('async');
 var nodemailer = require('nodemailer');
@@ -99,7 +98,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.EXPRESS_SESSION_SECRET));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use("/traouegezh", express.static(path.join(__dirname, "/assets/public")));
+app.use("/traouegezh", express.static(path.join(__dirname, "/media/public")));
 app.use(expressSession({
     secret: process.env.EXPRESS_SESSION_SECRET,
     saveUninitialized: true,
@@ -136,27 +135,37 @@ app.post('/login',
     failureFlash : { type: 'error', message: 'Password' } }),
 );
 
+//Registration
 app.get('/nevez', function(req, res, next) {
   req.user? res.redirect('/penn') : res.render('signup', {title: "Eienn"});
 });
 
 app.post('/signup', function(req, res, next) {
-  if (User.findOne({email: req.body.email}, function(err, user) {
-    if (user) return true;
-  })) {
-    return res.req.flash('alreadyAnAccount', 'this address is already used') && res.redirect('/');
-  } else {
-    User.register(new User({email: req.body.email}), req.body.password, function(err) {
-      if (err) {
-        console.log('error while user register!', err);
-        return next(err);
+  User.exists({email: req.body.email}, function(err, booleanValue) {
+    if (err) {
+      next(err);
+    } else {
+      if (booleanValue == true) {
+        return res.req.flash('alreadyAnAccount', 'this address is already used') && res.redirect('/');
+      } else {
+        User.register(new User({email: req.body.email}), req.body.password, function(err) {
+          if (err) {
+            return next(err);
+          } else {
+            User.findOne({email: req.body.email}, function(err, user) {
+              if (err) return next(err);
+              else if (user) {
+                req.logIn(user, function(err){
+                  if (err) return next(err);
+                  else return res.redirect('/penn');
+                });
+              }
+            })
+          }
+        })
       }
-
-      console.log('user registered!');
-
-      res.redirect('/penn');
-    });
-  }
+    }
+  })
 });
 
 //Forgot password
@@ -262,6 +271,21 @@ app.post('/ger-kuzh/nevez/:token', function(req, res, next) {
   })
 });
 
+app.get('/deski%C3%B1/:filePath/:file', function (req, res, next){
+  var file = req.params.filePath + '/' + req.params.file;
+  if (req.user && req.user.subscriptionActive === true) {
+    var options = {
+      root: path.join(__dirname, 'media'),
+    };
+    res.sendFile('methods/' + file + '.wav', options, function(err) {
+      if (err) return next(err);
+    })
+  } else {
+    res.status(403).end("N\'oc\'h ket aotreet da vont pelloc'h!");
+  }
+});
+
+
 app.get('/penn', function(req, res, next) {
   let userEmail = req.user? req.user.email : null;
   let subscriptionActive = req.user? req.user.subscriptionActive : false;
@@ -271,7 +295,6 @@ app.get('/penn', function(req, res, next) {
     active: subscriptionActive,
     newPassword: req.flash('password') || null,
   });
-  console.log(userEmail);
 });
 
 app.get('/logout', function(req, res, next) {
@@ -281,8 +304,7 @@ app.get('/logout', function(req, res, next) {
 
 app.get('/bretonffr', function(req, res, next) {
   let userEmail = req.user? req.user.email : null
-  res.render('demos/demobrffr', {title: "Demo Dreton - Eien", email: userEmail})
-  console.log(userEmail);
+  res.render('demos/demobrffr', {title: "Demo Dreton - Eien", email: userEmail});
 });
 
 app.get('/ouzhpenn', function(req, res, next) {
