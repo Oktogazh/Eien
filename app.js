@@ -170,7 +170,7 @@ app.post('/signup', function(req, res, next) {
 
 //Forgot password
 app.get('/ger-kuzh', function(req, res, next) {
-  res.render('forgot', {title: "Mot de passe oublié - Eien", errorMessage: req.flash('error')});
+  res.render('forgot', {title: "Mot de passe oublié - Eienn", errorMessage: req.flash('error')});
 });
 
 //Handles the form submitted in forgot.ejs, send and reset email
@@ -210,7 +210,7 @@ app.post('/ger-kuzh', function (req, res, next) {
         from: process.env.EMAIL_ADDRESS,
         subject: 'Réinitialiser mon mot de passe',
         text: 'Vous recevez ce mail car vous, ou une autre personne,' +
-        'a demandé une réinitialisation du mot de passe de votre compte Eien.' +
+        'a demandé une réinitialisation du mot de passe de votre compte Eienn.' +
         '\nSi vous n\'êtes pas à l\'origine de cette procédure,' +
         'contentez vous d\'ignorer ce message.' +
         'Si vous avez bien demandé une réinitialisation de votre mot de passe,' +
@@ -236,7 +236,7 @@ app.get('/ger-kuzh/nevez/:token', function(req, res, next) {
     req.flash('message', 'Token Expired or Invalid');
     return res.redirect('/ger-kuzh');
   }
-  res.render('reset', {title: "Réinitialisation du mot de passe - Eien", ResetPassword: req.params.token, message: req.flash('message'), host: process.env.APP_HOST });
+  res.render('reset', {title: "Réinitialisation du mot de passe - Eienn", ResetPassword: req.params.token, message: req.flash('message'), host: process.env.APP_HOST });
   })
 });
 
@@ -304,7 +304,7 @@ app.get('/logout', function(req, res, next) {
 
 app.get('/bretonffr', function(req, res, next) {
   let userEmail = req.user? req.user.email : null
-  res.render('demos/demobrffr', {title: "Demo Dreton - Eien", email: userEmail});
+  res.render('demos/demobrffr', {title: "Demo Dreton - Eienn", email: userEmail});
 });
 
 app.get('/ouzhpenn', function(req, res, next) {
