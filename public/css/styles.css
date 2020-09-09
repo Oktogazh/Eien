@@ -2011,6 +2011,17 @@ pre code {
   margin: auto;
 }
 
+.half {
+  float: left;
+  width: 35%;
+  margin-left: 12.5%;
+  margin-right: -7.5%;
+}
+
+.submitbtn {
+  margin-top: 2rem;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .form-control {
     transition: none;
