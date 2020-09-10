@@ -8,33 +8,22 @@
   <!-- Page Heading -->
   <h1 class="mb-4 mt-4"><%= title %></h1>
 
-  <% if (newPassword.length > 0) { %>
-    <div class="alert alert-heading alert-success">
-      <p><strong>Mot de passe réinisialisé avec succès!</strong> <br> Félicitation, voici votre nouveau mot de passe: <%= newPassword %> <br> Notez-le bien puis réactualisez cette page pour éffacer ce message.<p/>
-    </div>
-  <% } %>
+    <% if (newPassword.length > 0) { %>
+      <%- include('../../views/flashMessages/newPassword.ejs'); %>
+    <% } %>
 
   <div class="row alert-position">
-    <!-- Welcoming card -->
     <div class="col-lg-6">
-      <div class="card shadow mb-4">
-        <div class="card-header py-3">
-          <h6 class="m-0 font-weight-bold text-primary">Cette version n'est ni définitive, ni stable,
-            merci de votre compréhension...</h6>
-        </div>
-        <div class="card-body">
-          <% if (active === true) { %>
-          <p>Vous êtes abonné</p>
-          <% } else { %>
-          <p>Bienvenue, <br>
-            En mode découverte, vous ne pouvez accéder qu'au démonstration.
-            Pour un accès complet aux méthodes vous dever vous abonner.
-          </p>
-          <% } %>
-        </div>
-      </div>
-    </div>
+      <!-- Top Left Card [TLC] -->
+      <% if (!email) { %>
+        <%- include('cards/TLCVisitor.ejs'); %>
+      <% } else if (active === true) { %>
+        <%- include('cards/TLCActive.ejs'); %>
+      <% } else { %>
+        <%- include('cards/TLCUnactive.ejs'); %>
+      <% } %>
 
+    </div>
   </div>
 
 <%- include('../../views/templates/footer.ejs'); -%>
