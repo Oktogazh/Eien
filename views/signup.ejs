@@ -41,12 +41,12 @@
                     </div>
                     <div class="col-lg-8 align-self-baseline"><br>
                       <!-- <p class="text-white-75 font-weight-light mb-5"></p> -->
-                      <form action="/signup" method="post">
+                      <form action="/signup" id="form" method="post" onsubmit="return check();">
                         <div class="form-group">
                           <input required type="email" name="email" class="form-control center" placeholder="Votre adresse e-mail" /><br>
                         </div>
-                          <input required type="password" name="password" class="form-control center half" placeholder="Mot de passe"/>
-                          <input required type="password" name="password" class="form-control center half" placeholder="Confirmation"/>
+                          <input required type="password" name="password" class="form-control center half" id="pw1" placeholder="Mot de passe"/>
+                          <input required type="password" name="verify" class="form-control center half" id="pw2" placeholder="Confirmation"/>
                           <input class="btn btn-primary submitbtn js-scroll-trigger" type="submit" value="Bienvenue !"/>
                           <div class="text-center">
                             <br><br><br>
@@ -64,5 +64,20 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>
         <!-- Core theme JS-->
         <script src="js/scripts.js"></script>
+        <script>
+          const pw1 = document.getElementById('pw1');
+          const pw2 = document.getElementById('pw2');
+
+          function check() {
+            if (pw1.value != pw2.value) {
+              alert('Les mots de passes ne correspondent pas!');
+              pw1.value = "";
+              pw2.value = "";
+              return false;
+            }
+          };
+
+
+        </script>
     </body>
 </html>
