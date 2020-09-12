@@ -58,7 +58,6 @@ app.post('/webhooks', bodyParser.raw({type: 'application/json'}), (request, resp
     const session = event.data.object;
 
     //Fulfill the purchase...
-    console.log(session);
     User.findOne({
       email: session.customer_email
     }, function(err, user) {
@@ -271,15 +270,28 @@ app.post('/ger-kuzh/nevez/:token', function(req, res, next) {
   })
 });
 
-app.get('/deski%C3%B1/:filePath/:file', function (req, res, next){
-  var file = req.params.filePath + '/' + req.params.file;
+app.get('/deski%C3%B1/:folder/:file', function (req, res, next){
+  var folder = req.params.folder;
+  var file = req.params.file;
+  var filePath = folder + '/' + file;
+  var email = req.user.email || null;
   if (req.user && req.user.subscriptionActive === true) {
     var options = {
       root: path.join(__dirname, 'media'),
     };
-    res.sendFile('methods/' + file + '.wav', options, function(err) {
+    User.findOne({
+      email: email
+    }, function(err, user) {
+        if (err) return next(err);
+        user.learning.folder = folder;
+        user.learning.file = file;
+        user.save();
+        console.log(user)
+    });
+    res.sendFile('methods/' + filePath + '.wav', options, function(err) {
       if (err) return next(err);
-    })
+    });
+
   } else {
     res.status(403).end("N\'oc\'h ket aotreet da vont pelloc'h!");
   }
@@ -287,13 +299,19 @@ app.get('/deski%C3%B1/:filePath/:file', function (req, res, next){
 
 
 app.get('/penn', function(req, res, next) {
+  let title = 'Eienn';
   let userEmail = req.user? req.user.email : null;
   let subscriptionActive = req.user? req.user.subscriptionActive : false;
+  let newPassword = req.flash('password') || null;
+  let learningSource = req.user? req.user.learning.folder : null;
+  let file = req.user? req.user.learning.folder : null;
   res.render('main/main', {
-    title: "Accueil",
+    title: title,
     email: userEmail,
     active: subscriptionActive,
-    newPassword: req.flash('password') || null,
+    newPassword: newPassword,
+    learningSource: learningSource,
+    level: file,
   });
 });
 
