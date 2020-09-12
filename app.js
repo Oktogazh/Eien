@@ -274,7 +274,7 @@ app.get('/deski%C3%B1/:folder/:file', function (req, res, next){
   var folder = req.params.folder;
   var file = req.params.file;
   var filePath = folder + '/' + file;
-  var email = req.user.email || null;
+  var email = req.user? req.user.email : null;
   if (req.user && req.user.subscriptionActive === true) {
     var options = {
       root: path.join(__dirname, 'media'),
@@ -304,14 +304,14 @@ app.get('/penn', function(req, res, next) {
   let subscriptionActive = req.user? req.user.subscriptionActive : false;
   let newPassword = req.flash('password') || null;
   let learningSource = req.user? req.user.learning.folder : null;
-  let file = req.user? req.user.learning.folder : null;
+  let file = req.user? req.user.learning.file : null;
   res.render('main/main', {
     title: title,
     email: userEmail,
     active: subscriptionActive,
     newPassword: newPassword,
     learningSource: learningSource,
-    level: file,
+    file: file,
   });
 });
 

@@ -1,9 +1,24 @@
 <div class="card shadow mb-4">
   <div class="card-header py-3">
-    <h6 class="m-0 font-weight-bold text-primary">Cette version n'est ni définitive, ni stable,
-      merci de votre compréhension...</h6>
+    <h6 class="m-0 font-weight-bold text-primary" id="cardTitle"></h6>
   </div>
   <div class="card-body">
     <p>Vous êtes abonné</p>
   </div>
 </div>
+
+<!-- Changes the title of the card following the level (Breton&French only!) -->
+<script type="text/javascript">
+  var s, p, titleText, title, file = <%= file %>;
+  s = Math.floor(Number(file) / 7) + 1;
+  p = Number(file) % 7;
+  p = (p == 0)? 7 : p;
+  if (s > 2) {
+    s = `Sizhun ${s}`
+  } else {
+    s = `Semaine ${s}`
+  }
+  titleText = `${s} / Podcast ${p}`;
+  title = document.getElementById('cardTitle');
+  title.innerHTML = titleText;
+</script>

@@ -6,43 +6,27 @@
 <% } %>
 
   <!-- Page Heading -->
-  <% var h1 = (level == null)? 'Accueil' :  `Kentel ${level}` %>
+  <% var h1 = (file == null)? 'Accueil' :  `Kentel ${file}` %>
   <h1 class="mb-4 mt-4"><%= h1 %></h1>
 
-<<<<<<< HEAD
-    <% if (newPassword.length > 0) { %>
-      <%- include('../../views/flashMessages/newPassword.ejs'); %>
-    <% } %>
-=======
   <% if (newPassword.length > 0) { %>
     <%- include('../../views/flashMessages/newPassword.ejs'); %>
   <% } %>
->>>>>>> interface
 
   <!-- Main Row -->
   <div class="row alert-position">
-<<<<<<< HEAD
-=======
 
     <!-- Left Column -->
->>>>>>> interface
     <div class="col-lg-6">
       <!-- Top Left Card [TLC] -->
       <% if (!email) { %>
         <%- include('cards/TLCVisitor.ejs'); %>
       <% } else if (active === true) { %>
-<<<<<<< HEAD
-        <%- include('cards/TLCActive.ejs'); %>
-      <% } else { %>
-        <%- include('cards/TLCUnactive.ejs'); %>
-      <% } %>
-
-    </div>
-=======
         <%- include('cards/TLCActive.ejs'); %> <!-- Player -->
       <% } else { %>
         <%- include('cards/TLCUnactive.ejs'); %>
       <% } %>
+
       <%- include('cards/Events.ejs'); %>
       <%- include('cards/About.ejs'); %>
 
@@ -62,7 +46,6 @@
     </div>
 
   <!-- Main Row End -->
->>>>>>> interface
   </div>
 
 <%- include('../../views/templates/footer.ejs'); -%>
