@@ -2,28 +2,49 @@
 <% if (email) { %>
   <%- include('../../views/templates/header.ejs'); %>
 <% } else { %>
-    <%- include('../../views/templates/headerno.ejs'); %>
+  <%- include('../../views/templates/headerno.ejs'); %>
 <% } %>
 
   <!-- Page Heading -->
-  <h1 class="mb-4 mt-4"><%= title %></h1>
+  <% var h1 = (level == null)? 'Accueil' :  `Kentel ${level}` %>
+  <h1 class="mb-4 mt-4"><%= h1 %></h1>
 
-    <% if (newPassword.length > 0) { %>
-      <%- include('../../views/flashMessages/newPassword.ejs'); %>
-    <% } %>
+  <% if (newPassword.length > 0) { %>
+    <%- include('../../views/flashMessages/newPassword.ejs'); %>
+  <% } %>
 
+  <!-- Main Row -->
   <div class="row alert-position">
+
+    <!-- Left Column -->
     <div class="col-lg-6">
       <!-- Top Left Card [TLC] -->
       <% if (!email) { %>
         <%- include('cards/TLCVisitor.ejs'); %>
       <% } else if (active === true) { %>
-        <%- include('cards/TLCActive.ejs'); %>
+        <%- include('cards/TLCActive.ejs'); %> <!-- Player -->
       <% } else { %>
         <%- include('cards/TLCUnactive.ejs'); %>
       <% } %>
+      <%- include('cards/Events.ejs'); %>
+      <%- include('cards/About.ejs'); %>
 
+    <!-- Left Column End -->
     </div>
+
+    <!-- Right Column -->
+    <div class="col-lg-6">
+      <!-- Top Left Card [TLC] -->
+      <% if (active === true) { %>
+        <%- include('cards/TRCActive.ejs'); %> <!-- Lesson Data -->
+      <% } else { %>
+        <%- include('cards/TRCUnactive.ejs'); %>
+      <% } %>
+
+    <!-- Right Column End -->
+    </div>
+
+  <!-- Main Row End -->
   </div>
 
 <%- include('../../views/templates/footer.ejs'); -%>

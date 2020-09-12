@@ -12,19 +12,15 @@ var user = new Schema({
       type: Boolean,
       default: false
     },
-    languages: [{
-      name: String,
-      dialect: String,
-      begins: Boolean,
-      started: Date,
-      level: {
-        type: Number,
-        default: 0
-      }
-    }],
     customerId: String,
-    subscriptionId: String
-}, {timestamps: true});
+    subscriptionId: String,
+    learning: {
+      folder: {type: String,
+        default: null},
+      file: {type: String,
+        default: null},
+    },
+  }, {timestamps: true});
 
 user.plugin(passportLocalMongoose, {
     usernameField: 'email'
