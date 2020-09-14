@@ -1,24 +1,63 @@
 <div class="card shadow mb-4">
   <div class="card-header py-3">
-    <h6 class="m-0 font-weight-bold text-primary" id="cardTitle"></h6>
+    <h6 class="m-0 font-weight-bold text-primary" id="TLCTitle"></h6>
   </div>
   <div class="card-body">
-    <p>Vous êtes abonné</p>
+    <div>
+      <audio src="" id="audioSource" type="audio/wav" controls>
+    </div>
+    <button type="button" onclick="previousFile()"> << </button>
+    <button type="button" onclick="nextFile()"> >> </button>
   </div>
 </div>
 
-<!-- Changes the title of the card following the level (Breton&French only!) -->
+
 <script type="text/javascript">
-  var s, p, titleText, title, file = <%= file %>;
-  s = Math.floor(Number(file) / 7) + 1;
-  p = Number(file) % 7;
-  p = (p == 0)? 7 : p;
-  if (s > 2) {
-    s = `Sizhun ${s}`
-  } else {
-    s = `Semaine ${s}`
+  // Changes the title of the card following the advancement
+  var folder = '<%= learningSource %>';
+  var file = '<%= file %>';
+  var audioSource = document.getElementById('audioSource');
+  var s, p, titleText, title, h1Text, h1;
+
+  function setTitle(file) {
+    s = Math.ceil(parseInt(file) / 7);
+    p = parseInt(file) % 7;
+    p = (p == 0) ? 7 : p;
+
+    if (s > 2) {
+      s = `Sizhun ${s}`
+    } else {
+      s = `Semaine ${s}`
+    }
+    titleText = `${s} / Podcast ${p}`;
+    title = document.getElementById('TLCTitle');
+    title.innerHTML = titleText;
+
+    h1Text = (parseInt(file) == null)? 'Accueil' :  `Kentel ${file}`;
+    h1 = document.getElementsByTagName('h1');
+    h1[0].innerText = h1Text;
   }
-  titleText = `${s} / Podcast ${p}`;
-  title = document.getElementById('cardTitle');
-  title.innerHTML = titleText;
+
+
+  function chargeData(folder, file) {
+    setTitle(file);
+    audioSource.setAttribute("src", `/deskiñ/${folder}/${file}`);
+  }
+
+  window.onload = chargeData(folder, file);
+
+  function previousFile() {
+    file = parseInt(file);
+    file--;
+    return chargeData(folder,file);
+  }
+
+  function nextFile() {
+    file = parseInt(file);
+    file++;
+    return chargeData(folder, file);
+  }
+
+  function buttonLimit() {}
+
 </script>
