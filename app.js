@@ -270,7 +270,7 @@ app.post('/ger-kuzh/nevez/:token', function(req, res, next) {
   })
 });
 
-app.get('/deski%C3%B1/:folder/:file', function (req, res, next){
+app.get('/deski%C3%B1/:folder/:file', function(req, res, next) {
   var folder = req.params.folder;
   var file = req.params.file;
   var filePath = folder + '/' + file;

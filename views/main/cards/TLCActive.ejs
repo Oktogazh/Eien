@@ -4,9 +4,10 @@
   </div>
   <div class="card-body">
     <div>
-      <audio src="" id="audioSource" type="audio/wav" controls>
+      <audio src="" id="audioSource" type="audio/wav">
     </div>
     <button type="button" onclick="previousFile()"> << </button>
+    <button type="button" id="playBtn">Écouter</button>
     <button type="button" onclick="nextFile()"> >> </button>
   </div>
 </div>
@@ -17,6 +18,8 @@
   var folder = '<%= learningSource %>';
   var file = '<%= file %>';
   var audioSource = document.getElementById('audioSource');
+  var playPause = document.getElementById('playBtn');
+
   var s, p, titleText, title, h1Text, h1;
 
   function setTitle(file) {
@@ -38,7 +41,6 @@
     h1[0].innerText = h1Text;
   }
 
-
   function chargeData(folder, file) {
     setTitle(file);
     audioSource.setAttribute("src", `/deskiñ/${folder}/${file}`);
@@ -46,6 +48,35 @@
 
   window.onload = chargeData(folder, file);
 
+  //Play&Pause button
+  function playAndPause() {
+
+    function switchState() {
+      if (audioSource.paused == true) {
+        audioSource.play();
+        playPause.innerHTML = "Pause";
+      } else {
+        audioSource.pause();
+        playPause.innerHTML = "Continuer";
+      }
+    }
+
+    function checkKey(e) {
+      if (e.keycode == 32 ) {
+        switchState();
+      }
+    }
+
+    playPause.addEventListener('click', function() {
+      switchState();
+    }, false);
+
+    window.addEventListener("keypress", checkKey, false);
+  }
+
+  window.onload = playAndPause();
+
+  //Previous&Next buttons
   function previousFile() {
     file = parseInt(file);
     file--;
