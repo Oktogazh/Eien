@@ -6,9 +6,17 @@
     <div>
       <audio src="" id="audioSource" type="audio/wav">
     </div>
-    <button type="button" onclick="previousFile()"> << </button>
-    <button type="button" id="playBtn">Écouter</button>
-    <button type="button" onclick="nextFile()"> >> </button>
+    <div style="text-align:center">
+      <div class="">
+        <button type="button" onclick="add(-10)"> -10' </button>
+        <button type="button" id="playBtn">Écouter</button>
+        <button type="button" onclick="add(10)"> +10' </button>
+      </div>
+      <div class="">
+        <button style="margin-right:20rem;"type="button" onclick="previousFile()"> << </button>
+        <button style="margin-left:20rem;" type="button" onclick="nextFile()"> >> </button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -75,6 +83,10 @@
   }
 
   window.onload = playAndPause();
+
+  function add(x) {
+    audioSource.currentTime += x;
+  }
 
   //Previous&Next buttons
   function previousFile() {
