@@ -97,7 +97,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.EXPRESS_SESSION_SECRET));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use("/traouegezh", express.static(path.join(__dirname, "/media/public")));
+app.use("/traouegezh", express.static(path.join(__dirname, "/data/public")));
 app.use(expressSession({
     secret: process.env.EXPRESS_SESSION_SECRET,
     saveUninitialized: true,
@@ -277,7 +277,7 @@ app.get('/deski%C3%B1/:folder/:file', function(req, res, next) {
   var email = req.user? req.user.email : null;
   if (req.user && req.user.subscriptionActive === true) {
     var options = {
-      root: path.join(__dirname, 'media'),
+      root: path.join(__dirname, 'data'),
     };
     User.findOne({
       email: email
@@ -296,6 +296,23 @@ app.get('/deski%C3%B1/:folder/:file', function(req, res, next) {
   }
 });
 
+app.get('/meta/:folder/:file', function(req, res, next) {
+  var folder = req.params.folder;
+  var file = req.params.file;
+  var filePath = folder + '/' + file;
+  var email = req.user? req.user.email : null;
+  if (req.user && req.user.subscriptionActive === true) {
+    var options = {
+      root: path.join(__dirname, 'data'),
+    };
+    res.sendFile('metadata/' + filePath + '.json', options, function(err) {
+      if (err) return next(err);
+    });
+
+  } else {
+    res.status(403).end("N\'oc\'h ket aotreet da vont pelloc'h!");
+  }
+});
 
 app.get('/penn', function(req, res, next) {
   let title = 'Eienn';

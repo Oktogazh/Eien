@@ -30,7 +30,7 @@
 
   var s, p, titleText, title, h1Text, h1;
 
-  function setTitle(file) {
+  function setTLCTitle(file) {
     s = Math.ceil(parseInt(file) / 7);
     p = parseInt(file) % 7;
     p = (p == 0) ? 7 : p;
@@ -50,7 +50,7 @@
   }
 
   function chargeData(folder, file) {
-    setTitle(file);
+    setTLCTitle(file);
     audioSource.setAttribute("src", `/deskiñ/${folder}/${file}`);
   }
 
@@ -92,13 +92,13 @@
   function previousFile() {
     file = parseInt(file);
     file--;
-    return chargeData(folder,file);
+    return chargeData(folder, file), chargeMetaData(folder, file);
   }
 
   function nextFile() {
     file = parseInt(file);
     file++;
-    return chargeData(folder, file);
+    return chargeData(folder, file), chargeMetaData(folder, file);
   }
 
   function buttonLimit() {}
