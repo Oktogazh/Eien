@@ -286,7 +286,6 @@ app.get('/deski%C3%B1/:folder/:file', function(req, res, next) {
         user.learning.folder = folder;
         user.learning.file = file;
         user.save();
-        console.log(user)
     });
     res.sendFile('methods/' + filePath + '.wav', options, function(err) {
       if (err) return next(err);
