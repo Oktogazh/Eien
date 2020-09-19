@@ -290,7 +290,6 @@ app.get('/deski%C3%B1/:folder/:file', function(req, res, next) {
     res.sendFile('methods/' + filePath + '.wav', options, function(err) {
       if (err) return next(err);
     });
-
   } else {
     res.status(403).end("N\'oc\'h ket aotreet da vont pelloc'h!");
   }
@@ -319,14 +318,14 @@ app.get('/penn', function(req, res, next) {
   let userEmail = req.user? req.user.email : null;
   let subscriptionActive = req.user? req.user.subscriptionActive : false;
   let newPassword = req.flash('password') || null;
-  let learningSource = req.user? req.user.learning.folder : null;
+  let folder = req.user? req.user.learning.folder : null;
   let file = req.user? req.user.learning.file : null;
   res.render('main/main', {
     title: title,
     email: userEmail,
     active: subscriptionActive,
     newPassword: newPassword,
-    learningSource: learningSource,
+    folder: folder,
     file: file,
   });
 });

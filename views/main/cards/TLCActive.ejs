@@ -13,8 +13,8 @@
         <button type="button" onclick="add(10)"> +10' </button>
       </div>
       <div class="">
-        <button style="margin-right:20rem;"type="button" onclick="previousFile()"> << </button>
-        <button style="margin-left:20rem;" type="button" onclick="nextFile()"> >> </button>
+        <button style="margin-right:20rem;" type="button" onclick="prevFile()" id="prev"> << </button>
+        <button style="margin-left:20rem;" type="button" onclick="nextFile()" id="next"> >> </button>
       </div>
     </div>
   </div>
@@ -23,7 +23,7 @@
 
 <script type="text/javascript">
   // Changes the title of the card following the advancement
-  var folder = '<%= learningSource %>';
+  var folder = '<%= folder %>';
   var file = '<%= file %>';
   var audioSource = document.getElementById('audioSource');
   var playPause = document.getElementById('playBtn');
@@ -49,9 +49,37 @@
     h1[0].innerText = h1Text;
   }
 
+  // Check if there are metadata for the next lesson, hide nextbtn when false
+  function setLimits(file) {
+    var prevbtn = document.getElementById('prev');
+    var nextbtn = document.getElementById('next');
+    var xhrLim = new XMLHttpRequest();
+    var urlLim = `/meta/${folder}/` + (parseInt(file) + 1).toString();
+
+    function removeNext() {
+      nextbtn.style.display = "none";
+    }
+
+    xhrLim.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 404) {
+        removeNext();
+      }
+    }
+
+    xhrLim.open('GET', urlLim, true);
+    xhrLim.send();
+
+    if (file == 1) {
+      prevbtn.style.display = "none";
+    } else {
+      prevbtn.style.display = nextbtn.style.display = "block";
+    }
+  }
+
   function chargeData(folder, file) {
     setTLCTitle(file);
     audioSource.setAttribute("src", `/deskiñ/${folder}/${file}`);
+    setLimits(file);
   }
 
   window.onload = chargeData(folder, file);
@@ -82,25 +110,27 @@
     window.addEventListener("keypress", checkKey, false);
   }
 
-  window.onload = playAndPause();
-
   function add(x) {
     audioSource.currentTime += x;
   }
 
+  window.onload = playAndPause();
+
   //Previous&Next buttons
-  function previousFile() {
+  function prevFile() {
     file = parseInt(file);
     file--;
-    return chargeData(folder, file), chargeMetaData(folder, file);
+    chargeData(folder, file);
+    chargeMetaData(folder, file);
+    setLimits(file);
   }
 
   function nextFile() {
     file = parseInt(file);
     file++;
-    return chargeData(folder, file), chargeMetaData(folder, file);
+    chargeData(folder, file);
+    chargeMetaData(folder, file);
+    setLimits(file);
   }
-
-  function buttonLimit() {}
 
 </script>
