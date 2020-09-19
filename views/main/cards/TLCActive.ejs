@@ -12,9 +12,9 @@
         <button type="button" id="playBtn">Écouter</button>
         <button type="button" onclick="add(10)"> +10' </button>
       </div>
-      <div class="">
-        <button style="margin-right:20rem;" type="button" onclick="prevFile()" id="prev"> << </button>
-        <button style="margin-left:20rem;" type="button" onclick="nextFile()" id="next"> >> </button>
+      <div class="text-align:center">
+        <button type="button" onclick="prevFile()" id="prev"> << </button>
+        <button type="button" onclick="nextFile()" id="next"> >> </button>
       </div>
     </div>
   </div>
@@ -85,17 +85,20 @@
   window.onload = chargeData(folder, file);
 
   //Play&Pause button
-  function playAndPause() {
-
-    function switchState() {
-      if (audioSource.paused == true) {
-        audioSource.play();
-        playPause.innerHTML = "Pause";
-      } else {
-        audioSource.pause();
-        playPause.innerHTML = "Continuer";
-      }
+  function switchState(x) {
+    if (x) {
+      audioSource.currentTime = x;
     }
+    if (audioSource.paused == true) {
+      audioSource.play();
+      playPause.innerHTML = "Pause";
+    } else {
+      audioSource.pause();
+      playPause.innerHTML = "Continuer";
+    }
+  }
+
+  function playAndPause() {
 
     function checkKey(e) {
       if (e.keycode == 32 ) {
