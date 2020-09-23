@@ -204,6 +204,15 @@ img {
   border-style: none;
 }
 
+.logo {
+  background-image: url(/css/logo.svg);
+  display: block;
+  width: 45px;
+  height: 45px;
+  margin: 1.5rem;
+  margin-bottom: 0.2rem;
+}
+
 svg {
   overflow: hidden;
   vertical-align: middle;
