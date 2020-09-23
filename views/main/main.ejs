@@ -1,9 +1,5 @@
 
-<% if (email) { %>
-  <%- include('../../views/templates/header.ejs'); %>
-<% } else { %>
-  <%- include('../../views/templates/headerno.ejs'); %>
-<% } %>
+<%- include('../../views/templates/header.ejs'); %>
 
   <!-- Page Heading -->
   <% var h1 = (file == null)? 'Accueil' :  `Kentel ${file}` %>
