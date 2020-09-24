@@ -11264,3 +11264,65 @@ footer.sticky-footer .copyright {
 body.sidebar-toggled footer.sticky-footer {
   width: 100%;
 }
+
+.player {
+  background: url("/css/player/background.svg");
+  display: block;
+}
+
+#playBtn {
+  position: relative;
+}
+
+.tenSec {
+  width: 50%;
+  height: 10rem;
+}
+
+.tenS {
+  display: block;
+  background: url("/css/player/10sec.svg");
+  width: 40px;
+  height: 31px;
+  margin: auto;
+}
+
+.fLeft{
+  float: left;
+}
+
+.minSign {
+  float: right;
+  display: block;
+  width: 20px;
+  height: 20px;
+  margin: 2rem;
+  background: url("/css/player/minus.svg");
+}
+
+.fRight{
+  float: right;
+}
+
+.plSign {
+  float: left;
+  display: block;
+  width: 20px;
+  height: 20px;
+  margin: 2rem;
+  background: url("/css/player/plus.svg");
+}
+
+.paused {
+  background: url("/css/player/paused.svg");
+  display: block;
+  width: 75px;
+  height: 75px;
+}
+
+.playing {
+  background: url("/css/player/playing.svg");
+  display: block;
+  width: 50px;
+  height: 50px;
+}

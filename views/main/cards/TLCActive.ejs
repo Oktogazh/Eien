@@ -6,16 +6,18 @@
     <div>
       <audio src="" id="audioSource" type="audio/wav">
     </div>
-    <div style="text-align:center">
-      <div class="">
-        <button type="button" onclick="add(-10)"> -10' </button>
-        <button type="button" id="playBtn">Écouter</button>
-        <button type="button" onclick="add(10)"> +10' </button>
+    <div style="text-align:center"><!-- class="player" -->
+      <div class="tenSec fLeft" onclick="add(-10);">
+        <div class="minSign"></div>
       </div>
-      <div class="text-align:center">
-        <button type="button" onclick="prevFile()" id="prev"> << </button>
-        <button type="button" onclick="nextFile()" id="next"> >> </button>
+      <div class="tenSec fRight" onclick="add(10);">
+        <div class="plSign"></div>
       </div>
+        <br>
+      <div class="tenS"></div><br>
+      <div class="paused" type="button" id="playBtn"></div>
+      <button type="button" onclick="nextFile()" class="fRight" id="next"> >> </button>
+      <button type="button" onclick="prevFile()" class="fRight"  id="prev"> << </button>
     </div>
   </div>
 </div>
@@ -91,17 +93,17 @@
     }
     if (audioSource.paused == true) {
       audioSource.play();
-      playPause.innerHTML = "Pause";
+      playPause.setAttribute('class', 'playing');
     } else {
       audioSource.pause();
-      playPause.innerHTML = "Continuer";
+      playPause.setAttribute('class', 'paused');
     }
   }
 
   function playAndPause() {
 
     function checkKey(e) {
-      if (e.keycode == 32 ) {
+      if (e.charCode == 32 ) {
         switchState();
       }
     }
