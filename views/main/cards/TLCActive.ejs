@@ -6,18 +6,22 @@
     <div>
       <audio src="" id="audioSource" type="audio/wav">
     </div>
-    <div style="text-align:center"><!-- class="player" -->
+    <div class="player">
       <div class="tenSec fLeft" onclick="add(-10);">
         <div class="minSign"></div>
       </div>
       <div class="tenSec fRight" onclick="add(10);">
         <div class="plSign"></div>
       </div>
-        <br>
+      <br>
       <div class="tenS"></div><br>
-      <div class="paused" type="button" id="playBtn"></div>
-      <button type="button" onclick="nextFile()" class="fRight" id="next"> >> </button>
-      <button type="button" onclick="prevFile()" class="fRight"  id="prev"> << </button>
+      <div class="paused" type="button" id="playBtn"></div> <br>
+      <div class="fRight" style="position:relative;width:25%;height:28px">
+        <button type="button" onclick="nextFile()" class="fRight" id="next"> >> </button>
+      </div>
+      <div class="fLeft" style="position:relative;width:100px">
+        <button type="button" onclick="prevFile()"  id="prev"> << </button>
+      </div>
     </div>
   </div>
 </div>
