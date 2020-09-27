@@ -5,11 +5,20 @@
   <div class="card-body" id="TRCContent">
   </div>
 </div>
+<div class="card shadow mb-4">
+  <div class="card-header py-3">
+    <h6 class="m-0 font-weight-bold text-primary" id="TRCTitleBis"></h6>
+  </div>
+  <div class="card-body" id="TRCContentBis">
+  </div>
+</div>
 
 <script type="text/javascript">
   // Request and put the metadata in the cards
   var titleTRC = document.getElementById('TRCTitle');
   var contentTRC = document.getElementById('TRCContent');
+  var titleTRC2 = document.getElementById('TRCTitleBis');
+  var contentTRC2 = document.getElementById('TRCContentBis');
 
   document.onload = chargeMetaData(folder, file);
 
@@ -21,18 +30,20 @@
     xhr.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
         var metaData = JSON.parse(this.responseText);
-        setTRCTitle(metaData), setTRCBody(metaData);
+        setTRCTitles(metaData), setTRCBodies(metaData);
       }
     }
 
     xhr.open('GET', url, true);
     xhr.send();
 
-    function setTRCTitle(data) {
-      titleTRC.innerHTML = data.title;
+    function setTRCTitles(data) {
+      titleTRC.innerHTML = data.title1;
+      titleTRC2.innerHTML = data.title2;
     }
-    function setTRCBody(data) {
-      contentTRC.innerHTML = data.body;
+    function setTRCBodies(data) {
+      contentTRC.innerHTML = data.body1;
+      contentTRC2.innerHTML = data.body2;
     }
   }
 
