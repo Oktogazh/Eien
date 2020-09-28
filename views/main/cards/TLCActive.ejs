@@ -85,6 +85,7 @@
   function chargeData(folder, file) {
     setTLCTitle(file);
     audioSource.setAttribute("src", `/deskiñ/${folder}/${file}`);
+    playPause.setAttribute('class', 'paused');
     setLimits(file);
   }
 
@@ -131,7 +132,6 @@
     file--;
     chargeData(folder, file);
     chargeMetaData(folder, file);
-    setLimits(file);
   }
 
   function nextFile() {
@@ -139,7 +139,6 @@
     file++;
     chargeData(folder, file);
     chargeMetaData(folder, file);
-    setLimits(file);
   }
 
 </script>
