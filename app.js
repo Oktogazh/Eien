@@ -63,6 +63,8 @@ app.post('/webhooks', bodyParser.raw({type: 'application/json'}), (request, resp
     }, function(err, user) {
       if (user) {
         user.subscriptionActive = true;
+        user.learning.folder = null;
+        user.learning.file = 0;
         user.subscriptionId = session.subscription;
         user.customerId = session.customer;
         user.save();
@@ -320,6 +322,23 @@ app.get('/penn', function(req, res, next) {
   let newPassword = req.flash('password') || null;
   let folder = req.user? req.user.learning.folder : null;
   let file = req.user? req.user.learning.file : null;
+  res.render('main/main', {
+    title: title,
+    email: userEmail,
+    active: subscriptionActive,
+    newPassword: newPassword,
+    folder: folder,
+    file: file,
+  });
+});
+
+app.post('/penn', function(req, res, next) {
+  let title = 'Eienn';
+  let userEmail = req.user? req.user.email : null;
+  let subscriptionActive = req.user? req.user.subscriptionActive : false;
+  let newPassword = req.flash('password') || null;
+  let folder = "brffr";
+  let file = "1";
   res.render('main/main', {
     title: title,
     email: userEmail,

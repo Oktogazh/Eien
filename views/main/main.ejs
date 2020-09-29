@@ -3,7 +3,7 @@
 
   <!-- Page Heading -->
   <% var h1 = (file == null)? 'Accueil' :  `Kentel ${file}` %>
-  <h1 class="mb-4 mt-4"><%= h1 %></h1>
+  <h1 class="mb-4 mt-4" id="mainTitle"><%= h1 %></h1>
 
   <% if (newPassword.length > 0) { %>
     <%- include('../../views/flashMessages/newPassword.ejs'); %>
@@ -17,8 +17,10 @@
       <!-- Top Left Card [TLC] -->
       <% if (!email) { %>
         <%- include('cards/TLCVisitor.ejs'); %>
-      <% } else if (active === true) { %>
-        <%- include('cards/TLCActive.ejs'); %> <!-- Player -->
+      <% } else if (active === true && file > 0) { %> <!-- Player -->
+        <%- include('cards/TLCActive.ejs'); %>
+      <% } else if (active === true) { %> <!-- Welcoming  Card -->
+        <%- include('cards/TLCStarting.ejs'); %>
       <% } else { %>
         <%- include('cards/TLCUnactive.ejs'); %>
       <% } %>
@@ -32,8 +34,10 @@
     <!-- Right Column -->
     <div class="col-lg-6">
       <!-- Top Left Card [TLC] -->
-      <% if (active === true) { %>
+      <% if (active === true && file > 0) { %>
         <%- include('cards/TRCActive.ejs'); %> <!-- Lesson Data -->
+      <% } else if (active === true ) { %>
+        <%- include('cards/TRCStarting.ejs'); %>
       <% } else { %>
         <%- include('cards/TRCUnactive.ejs'); %>
       <% } %>
