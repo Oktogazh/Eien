@@ -11266,12 +11266,14 @@ body.sidebar-toggled footer.sticky-footer {
 }
 
 .player {
-  background: url("/css/player/background.svg");
-  display: block;
+  background:rgb(162,210,255);
+  background:linear-gradient(0deg,rgba(162,210,255,0)0%,rgba(196,226,255,0.15)10%,rgba(202,229,255,0.3)80%,rgba(199,228,255,0.7049020291710435)100%);
+  border-radius: 0.75rem;
 }
 
 #playBtn {
   position: relative;
+  margin-bottom: 2rem;
 }
 
 .tenSec {
