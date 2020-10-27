@@ -37,7 +37,6 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('trust proxy', 1);
 app.set('view engine', 'ejs');
 
-
 // Use body-parser to retrieve the raw body as a buffer
 const bodyParser = require('body-parser');
 
@@ -328,7 +327,7 @@ app.get('/penn', function(req, res, next) {
     active: subscriptionActive,
     newPassword: newPassword,
     folder: folder,
-    file: file,
+    file: subscriptionActive? file : null,
   });
 });
 
