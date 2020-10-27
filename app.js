@@ -363,6 +363,11 @@ app.get('/ouzhpenn', function(req, res, next) {
   res.render('newLanguage', {title: 'New Language', email: userEmail})
 });
 
+app.get('/Eienn', function(req, res, next) {
+  let userEmail = req.user? req.user.email : null
+  res.render('about', {title: 'Eienn - A propos', email: userEmail})
+});
+
 app.get('/stal', function(req, res, next) {
   const session = stripe.checkout.sessions.create({
     customer_email: req.user.email,
