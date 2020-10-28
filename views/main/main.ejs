@@ -17,15 +17,16 @@
       <!-- Top Left Card [TLC] -->
       <% if (!email) { %>
         <%- include('cards/TLCVisitor.ejs'); %>
+        <%- include('cards/AllRessources.ejs'); %>
       <% } else if (active === true && file > 0) { %> <!-- Player -->
         <%- include('cards/TLCActive.ejs'); %>
       <% } else if (active === true) { %> <!-- Welcoming  Card -->
         <%- include('cards/TLCStarting.ejs'); %>
       <% } else { %>
         <%- include('cards/TLCUnactive.ejs'); %>
+        <%- include('cards/AllRessources.ejs'); %>
       <% } %>
 
-      <%- include('cards/Ressources.ejs'); %>
       <%- include('cards/Events.ejs'); %>
 
     <!-- Left Column End -->
@@ -36,6 +37,7 @@
       <!-- Top Left Card [TLC] -->
       <% if (active === true && file > 0) { %>
         <%- include('cards/TRCActive.ejs'); %> <!-- Lesson Data -->
+        <%- include('cards/Ressources.ejs'); %>
       <% } else if (active === true ) { %>
         <%- include('cards/TRCStarting.ejs'); %>
       <% } else { %>

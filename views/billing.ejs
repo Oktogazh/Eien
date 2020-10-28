@@ -1,24 +1,21 @@
 <%- include('templates/header.ejs'); -%>
+
   <!-- Page Heading -->
   <h1 class="mb-4 mt-4"><%= title %></h1>
-
-  <div class="row">
 
     <!-- Stripe card -->
     <div class="col-lg-6">
 
       <div class="card shadow mb-4">
         <div class="card-header py-3">
-          <h6 class="m-0 font-weight-bold text-primary">Abonnement</h6>
+          <h6 class="m-0 font-weight-bold text-primary">Abonnez-vous des maintenant!</h6>
         </div>
 
         <div class="card-body">
           <% if (subscriptionActive) { %>
             <p>
               Merci de vous être abonné!
-              Lorsque vous souhaiterez vous désabonner,
-              vous n'aurez qu'à clicker sur "me désabonner" <br>
-              votre subId : <%= subscriptionId %>
+              N'oubliez pas de vous désabonner après avoir finis les podcasts!
             </p>
 
             <!-- Stripe cancelling subscription here -->
@@ -28,12 +25,12 @@
             </form>
 
           <% } else { %>
-              <p>Ceci est just un test, n'essayer pas d'acheter quoi que soit ici.
-               Pour simuler une inscription, utilisez le numéro de carte <code>4242 4242 4242 4242</code>
-               avec n'importe quelle valeurs dans les autres champs.</p>
+              <p>Cette méthode se base sur six mois d'enregistrements quotidien, à seulement 10€ par mois.
+              Il est temps pour vous de découvrir à quel point vous êtes doués pour apprendre de nouvelles langues.
+              </p>
 
               <!-- Stripe API here -->
-              <button onclick="gotoCheckout()" class="btn btn-primary btn-xl js-scroll-trigger">Subscribe here</button>
+              <button onclick="gotoCheckout()" class="btn btn-primary btn-xl js-scroll-trigger">Je m'abonne ici!</button>
 
               <script src="https://js.stripe.com/v3/"></script>
 
@@ -56,18 +53,5 @@
           </div>
         </div>
       </div>
-
-      <!-- Subscription instructions card -->
-      <div class="col-lg-6">
-        <div class="card shadow mb-4">
-          <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">How to get my library?</h6>
-          </div>
-          <div class="card-body">
-            <p>In this windows will be explainained how to procede to start learning</p>
-          </div>
-        </div>
-      </div>
-    </div>
 
 <%- include('templates/footer.ejs'); -%>
