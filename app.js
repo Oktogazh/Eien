@@ -355,7 +355,7 @@ app.get('/logout', function(req, res, next) {
 
 app.get('/bretonffr', function(req, res, next) {
   let userEmail = req.user? req.user.email : null
-  res.render('demos/demobrffr', {title: "Demo Dreton - Eienn", email: userEmail});
+  res.render('demos/brdzffr', {title: "Dialecte de Basse Cornouaille", email: userEmail, file: 1});
 });
 
 app.get('/ouzhpenn', function(req, res, next) {

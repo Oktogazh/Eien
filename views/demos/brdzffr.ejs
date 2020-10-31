@@ -1,0 +1,274 @@
+<%- include('../../views/templates/header.ejs'); %>
+
+<!-- Page Heading -->
+
+<h1 class="mb-4 mt-4" id="mainTitle"><% title %></h1>
+
+
+
+<!-- Main Row -->
+<div class="row alert-position">
+
+  <!-- Left Column -->
+  <div class="col-lg-6">
+    <!-- Top Left Card [TLC] -->
+    <!-- Player -->
+    <div class="card shadow mb-4">
+      <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary" id="TLCTitle"></h6>
+      </div>
+      <div class="card-body">
+        <div>
+          <audio src="" id="audioSource" type="audio/wav">
+          </div>
+          <div class="player">
+            <div class="tenSec fLeft" onclick="add(-10);">
+              <div class="minSign"></div>
+            </div>
+            <div class="tenSec fRight" onclick="add(10);">
+              <div class="plSign"></div>
+            </div>
+            <br>
+            <div class="tenS"></div><br>
+            <div class="paused" type="button" id="playBtn"></div> <br>
+            <div class="fRight">
+              <div style="background: url('/css/player/next.svg'); display: block; width: 75px; height: 75px;" onclick="nextFile()" class="fRight" id="next"></div>
+            </div>
+            <div class="fLeft"">
+              <div style="background: url('/css/player/previous.svg'); display: block; width: 75px; height: 75px;" onclick="prevFile()" class="fRight" id="prev"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary" id="TRCTitle"></h6>
+        </div>
+        <div class="card-body" id="TRCContent">
+        </div>
+      </div>
+
+      <script type="text/javascript">
+        // Changes the title of the card following the advancement
+        var file = <%= file %>;
+        var audioSource = document.getElementById('audioSource');
+        var playPause = document.getElementById('playBtn');
+
+        var s, p, titleText, title, h1Text, h1;
+
+        function setTLCTitle(file) {
+          s = Math.ceil(parseInt(file) / 7);
+          p = parseInt(file) % 7;
+          p = (p == 0) ? 7 : p;
+
+          if (s > 2) {
+            s = `Sizhun ${s}`
+          } else {
+            s = `Semaine ${s}`
+          }
+          titleText = `${s} / Podcast ${p}`;
+          title = document.getElementById('TLCTitle');
+          title.innerHTML = titleText;
+
+          //h1Text = (parseInt(file) == null)? 'Accueil' :  `Kentel ${file}`;
+          //h1 = document.getElementsByTagName('h1');
+          //h1[0].innerText = h1Text;
+        }
+
+        // Check if there are metadata for the next lesson, hide nextbtn when false
+        function setLimits(file) {
+          var prevbtn = document.getElementById('prev');
+          var nextbtn = document.getElementById('next');
+          var xhrLim = new XMLHttpRequest();
+          var urlLim = '/traouegezh/brdzffrmeta/' + (parseInt(file) + 1).toString() + '.json';
+
+          function removeNext() {
+            nextbtn.style.display = "none";
+          }
+
+          xhrLim.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 404) {
+              removeNext();
+            }
+          }
+
+          xhrLim.open('GET', urlLim, true);
+          xhrLim.send();
+
+          if (file == 1) {
+            prevbtn.style.display = "none";
+          } else {
+            prevbtn.style.display = nextbtn.style.display = "block";
+          }
+        }
+
+        function chargeData(file) {
+          setTLCTitle(file);
+          audioSource.setAttribute("src", `/traouegezh/brdzffr/${file}.wav`);
+          playPause.setAttribute('class', 'paused');
+          setLimits(file);
+        }
+
+        window.onload = chargeData(file);
+
+        //Play&Pause button
+        function switchState(x) {
+          if (x) {
+            audioSource.currentTime = x;
+          }
+          if (audioSource.paused == true) {
+            audioSource.play();
+            playPause.setAttribute('class', 'playing');
+          } else {
+            audioSource.pause();
+            playPause.setAttribute('class', 'paused');
+          }
+        }
+
+        function playAndPause() {
+
+          function checkKey(e) {
+            if (e.charCode == 32 ) {
+              switchState();
+            }
+          }
+
+          playPause.addEventListener('click', function() {
+            switchState();
+          }, false);
+
+          window.addEventListener("keypress", checkKey, false);
+        }
+
+        function add(x) {
+          audioSource.currentTime += x;
+        }
+
+        window.onload = playAndPause();
+
+        //Previous&Next buttons
+        function prevFile() {
+          file = parseInt(file);
+          file--;
+          chargeData(file);
+          chargeMetaData(file);
+        }
+
+        function nextFile() {
+          file = parseInt(file);
+          file++;
+          chargeData(file);
+          chargeMetaData(file);
+        }
+
+      </script>
+
+
+
+
+
+      <!-- Left Column End -->
+    </div>
+
+    <!-- Right Column -->
+    <div class="col-lg-6">
+      <!-- Top Left Card [TLC] -->
+
+
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary" id="TRCTitleBis"></h6>
+        </div>
+        <div class="card-body" id="TRCContentBis">
+        </div>
+      </div>
+
+      <script type="text/javascript">
+        // Request and put the metadata in the cards
+        var pageTitle = document.getElementById('pageTitle');
+        var lessonTitle = document.getElementById('mainTitle');
+        var titleTRC = document.getElementById('TRCTitle');
+        var contentTRC = document.getElementById('TRCContent');
+        var titleTRC2 = document.getElementById('TRCTitleBis');
+        var contentTRC2 = document.getElementById('TRCContentBis');
+
+        document.onload = chargeMetaData(file);
+
+        function chargeMetaData(file) {
+          var xhr = new XMLHttpRequest();
+          var url = `/traouegezh/brdzffrmeta/${file}.json`;
+
+
+          xhr.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+              var metaData = JSON.parse(this.responseText.replace(/\n/g, ''));
+              setTRCTitles(metaData),
+              setTRCBodies(metaData);
+            }
+          }
+
+          xhr.open('GET', url, true);
+          xhr.send();
+
+          function setTRCTitles(data) {
+            let thisTitle = data.title;
+            pageTitle.innerHTML = `Eienn - ${thisTitle}`;
+            lessonTitle.innerHTML = thisTitle;
+            titleTRC.innerHTML = data.title1;
+            titleTRC2.innerHTML = data.title2;
+          }
+          function setTRCBodies(data) {
+            contentTRC.innerHTML = data.body1;
+            contentTRC2.innerHTML = data.body2;
+          }
+        }
+
+      </script>
+      <!-- Lesson Data -->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Lec'hiennoù talvoudus / Adresses utiles</h6>
+        </div>
+        <div class="card-body" style="text-align:center;">
+          <a href="https://geriafurch.bzh/" target="blank">
+            <figure style="text-align: center; margin: 1.5rem; margin-top: 0; float: left;">
+              <img src="https://geriafurch.bzh/apple-icon-114x114.png" style="border-radius: 1.5rem;" alt="Balafenn">
+              <figcaption>Geriafurch</figcaption>
+            </figure>
+          </a>
+          <a href="http://www.geobreizh.bzh/" target="blank">
+            <figure style="text-align: center; margin: 1.5rem; margin-top: 0; float: left;">
+              <img src="http://www.geobreizh.bzh/wp-content/uploads/2020/05/cropped-Logo-Geobreizh-carr%C3%A9-1-180x180.png" style="border-radius: 1.5rem; height: 114px;" alt="Erminig">
+              <figcaption>Geobreizh</figcaption>
+            </figure>
+          </a>
+          <a href="http://drouizig.org/" target="blank">
+            <figure style="text-align: center; margin: 1.5rem; margin-top: 0; float: left;">
+              <img src="http://drouizig.org/images/drouizig-drouiz.png" style="border-radius: 1.5rem; height: 114px;" alt="Drouizig">
+              <figcaption>An Drouizig</figcaption>
+            </figure>
+          </a>
+          <a href="http://meurgorf.brezhoneg.bzh/" target="blank">
+            <figure style="text-align: center; margin: 1.5rem; margin-top: 0; float: left;">
+              <img src="http://meurgorf.brezhoneg.bzh/images/logo-OPLB.png" style="border-radius: 1.5rem; height: 114px;" alt="an Ofis">
+              <figcaption>Meurgorf</figcaption>
+            </figure>
+          </a>
+          <a href="http://www.dispak.bzh/" target="blank">
+            <figure style="text-align: center; margin: 1.5rem; margin-top: 0; float: left;">
+              <img src="http://www.dispak.bzh/wp-content/uploads/2018/08/cropped-dispak-logo-09-192x192.png" style="border-radius: 1.5rem; height: 114px;" alt="KB">
+              <figcaption>Dispak</figcaption>
+            </figure>
+          </a>
+        </div>
+      </div>
+
+
+
+      <!-- Right Column End -->
+    </div>
+
+    <!-- Main Row End -->
+  </div>
+
+<%- include('../../views/templates/footer.ejs'); -%>
