@@ -209,7 +209,7 @@ app.post('/ger-kuzh', function (req, res, next) {
         to: user.email,
         from: process.env.EMAIL_ADDRESS,
         subject: 'Réinitialiser mon mot de passe',
-        text: 'Vous recevez ce mail car vous, ou une autre personne,' +
+        text: 'Vous recevez ce mail car vous, ou une autre personne, ' +
         'a demandé une réinitialisation du mot de passe de votre compte Eienn.' +
         '\nSi vous n\'êtes pas à l\'origine de cette procédure,' +
         'contentez vous d\'ignorer ce message.' +
