@@ -382,7 +382,7 @@ app.get('/stal', function(req, res, next) {
   }, function(err, session) {
     if (err) return next(err);
     res.render('billing', {STRIPE_PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY,
-      title: 'Magasin',
+      title: 'Abonnement',
       sessionId: session.id,
       subscriptionActive: req.user.subscriptionActive,
       email: req.user.email,
