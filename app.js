@@ -360,7 +360,7 @@ app.get('/bretonffr', function(req, res, next) {
 
 app.get('/ouzhpenn', function(req, res, next) {
   let userEmail = req.user? req.user.email : null
-  res.render('newLanguage', {title: 'New Language', email: userEmail})
+  res.render('newLanguage', {title: 'Plus de Méthodes', email: userEmail})
 });
 
 app.get('/Eienn', function(req, res, next) {
