@@ -8,14 +8,13 @@
 
       <div class="card shadow mb-4">
         <div class="card-header py-3">
-          <h6 class="m-0 font-weight-bold text-primary">Abonnez-vous des maintenant!</h6>
+          <h6 class="m-0 font-weight-bold text-primary">S'abonner et se désabonner en un click</h6>
         </div>
 
         <div class="card-body">
           <% if (subscriptionActive) { %>
             <p>
-              Merci de vous être abonné!
-              N'oubliez pas de vous désabonner après avoir finis les podcasts!
+              N'oubliez pas de vous désabonner après avoir finis les podcasts !
             </p>
 
             <!-- Stripe cancelling subscription here -->
@@ -30,7 +29,7 @@
               </p>
 
               <!-- Stripe API here -->
-              <button onclick="gotoCheckout()" class="btn btn-primary btn-xl js-scroll-trigger">Je m'abonne ici!</button>
+              <button onclick="gotoCheckout()" class="btn btn-primary btn-xl js-scroll-trigger">Je m'abonne ici !</button>
 
               <script src="https://js.stripe.com/v3/"></script>
 
