@@ -3,6 +3,9 @@
   <!-- Page Heading -->
   <h1 class="mb-4 mt-4"><%= title %></h1>
 
+
+  <div class="row">
+
     <!-- Stripe card -->
     <div class="col-lg-6">
 
@@ -23,9 +26,9 @@
 
             </form>
 
-          <% } else { %>
-              <p>Cette méthode se base sur six mois d'enregistrements quotidien, à seulement 10€ par mois.
-              Il est temps pour vous de découvrir à quel point vous êtes doués pour apprendre de nouvelles langues.
+            <% } else { %>
+              <p>Cette méthode se base sur six mois d'enregistrements quotidien d'une dixaine de minute, à seulement 10€ par mois.
+                Il est temps pour vous de découvrir à quel point vous êtes doués pour apprendre de nouvelles langues.
               </p>
 
               <!-- Stripe API here -->
@@ -48,7 +51,39 @@
                   });
                 };
               </script>
-            <% } %>
+              <% } %>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="card shadow mb-4">
+            <div class="card-header py-3">
+              <h6 class="m-0 font-weight-bold text-primary">Avertissemen</h6>
+            </div>
+            <div class="card-body">
+              <p>
+                Douarnenez,<br>
+                D'ar Gwener 13/11/2020<br><br>
+
+                Bonjour
+                Ce site en est encore à ses balbutiements, bien qu'a priori fonctionnel pour vous apprendre le breton au plus vite, ce qui est notre objectif, nous préférons vous avertir que des problèmes peuvent se produire dans les prochains mois.
+                Certains problèmes techniques pouraient aller jusqu'à rendre impossible l'accès au site (même aux abonnés) et le choix du seul dialecte disponible pourait ne pas convenir à tout le monde.
+                Une solution serait de rendre la méthode accessible gratuitement et d'ajouté la fonctionnalité de payement plus tard, mais paradoxalement, cela ne ferait que retarder le développement du projet, et être in fine contre-productif.
+                Je me retrouverais par exemple forcé de travailler à côté pour pouvoir salarier Bleuenn qui est la première personne à m'avoir fais confiance sur ce projet, de plus sans fonds il serait impossible de recruter d'autres programmateurs pour développer une version plus stable du site.
+                Devant l'afflux de personnes qui ont créer un compte depuis hier (près de 90 personnes) je souhaite donc que celles et ceux qui souhaitent s'abonner le fasse en conscience :
+                <ul>
+                  <li><strong>du fait que la méthode n'est pas terminée !</strong> Nous continuons les enregistrements et bien que nous avons quelques semaines de podcasts d'avance nous ne pouvons pas garantir que certains évènements ne viendront pas perturber la publication de ces derniers et éventuellement bloquer l'apprendtissage des premières personnes à s'abonner.</li>
+                  <li>qu'en cas de problème avec les abonnements, les demandes de remboursement, de désincription etc... ne seront pas gérées de manière automatique, mais manuellement ce qui peut prendre une certaine durée, en fonction du nombre d'abonnés, il peut donc être interressant d'attendre que le site soit plus stable avant de se décider à s'abonner.</li>
+                  <li>et enfin du fait que j'ai décidé de diviser par deux le prix de l'abonnement en attendant que ces risques soient écartés, mais qu'en acceptant de payer vous serez considérés comme les aillant reconnus et acceptés.</li>
+                </ul>
+                Il y a donc de sérieuses raisons pour considérer attendre encore quelques mois avant de s'abonner. Mais si vous considérez avoir suffisament attendu et êtes prêts à prendre ce risque avec nous... alors je vous dis <i>ken emberr</i> pour la suite des podcasts !
+                <br>
+              </p>
+              <p style="text-align: right">
+                Alan Kersaudy
+              </p>
+            </div>
           </div>
         </div>
       </div>
