@@ -20,6 +20,7 @@ var user = new Schema({
       file: {type: String,
         default: null},
     },
+    badges: [String],
   }, {timestamps: true});
 
 user.plugin(passportLocalMongoose, {

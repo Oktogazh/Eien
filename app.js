@@ -66,6 +66,7 @@ app.post('/webhooks', bodyParser.raw({type: 'application/json'}), (request, resp
         user.learning.file = 0;
         user.subscriptionId = session.subscription;
         user.customerId = session.customer;
+        user.badges.push('Diazezer');
         user.save();
       }
     });
@@ -369,6 +370,9 @@ app.get('/Eienn', function(req, res, next) {
 });
 
 app.get('/stal', function(req, res, next) {
+    var subscribed = User.count({'subscriptionActive' : true}, function(err, count){
+      return count;
+  });
   const session = stripe.checkout.sessions.create({
     customer_email: req.user.email,
     payment_method_types: ['card'],
@@ -386,10 +390,12 @@ app.get('/stal', function(req, res, next) {
       sessionId: session.id,
       subscriptionActive: req.user.subscriptionActive,
       email: req.user.email,
-      subscriptionId: req.user.subscriptionId
+      subscriptionId: req.user.subscriptionId,
+      numSubscribed: subscribed - 10,
     })
   });
-});
+}
+);
 
 app.post('/unsubscribe', function(req, res, next) {
   stripe.subscriptions.del(req.user.subscriptionId);
