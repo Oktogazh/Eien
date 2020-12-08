@@ -11,14 +11,17 @@
 
       <div class="card shadow mb-4">
         <div class="card-header py-3">
-          <h6 class="m-0 font-weight-bold text-primary">S'abonner et se désabonner en un clic</h6>
+          <h6 class="m-0 font-weight-bold text-primary">
+              <% if (subscriptionActive) { %>
+                Vous désabonner ici !
+              <% } else { %>
+                S'abonner (<strike>et se désabonner en un clic</strike>) à vie !
+              <% } %>
+            </h6>
         </div>
 
         <div class="card-body">
           <% if (subscriptionActive) { %>
-            <p>
-              N'oubliez pas de vous désabonner après avoir finis les podcasts !
-            </p>
 
             <!-- Stripe cancelling subscription here -->
             <form action="/unsubscribe" method="post">
@@ -27,8 +30,9 @@
             </form>
 
             <% } else { %>
-              <p>Cette méthode se base sur six mois d'enregistrements quotidien d'une dixaine de minute, à seulement 10€ par mois.
+              <p>
                 Il est temps pour vous de découvrir à quel point vous êtes doués pour apprendre de nouvelles langues.
+                Cette méthode se base sur six mois d'enregistrements quotidien d'une dixaine de minutes. Abonnez vous pour la vie à seulement 50 € par mois.
               </p>
 
               <!-- Stripe API here -->
@@ -59,29 +63,21 @@
         <div class="col-lg-6">
           <div class="card shadow mb-4">
             <div class="card-header py-3">
-              <h6 class="m-0 font-weight-bold text-primary">Avertissement</h6>
+              <h6 class="m-0 font-weight-bold text-primary">Offre de Noël !</h6>
             </div>
             <div class="card-body">
-              <p>
-                D'ar Gwener 13/11/2020<br><br>
-
-                Bonjour, <br>
-                Ce site en est encore à ses balbutiements, bien qu'a priori fonctionnel pour vous apprendre le breton au plus vite, ce qui est notre objectif, nous préférons vous avertir que des problèmes peuvent se produire dans les prochains mois.
-                Certains problèmes techniques pouraient aller jusqu'à rendre impossible l'accès au site (même aux abonnés) et le choix du seul dialecte disponible pourait ne pas convenir à tout le monde.
-                Une solution serait de rendre la méthode accessible gratuitement et d'ajouté la fonctionnalité de payement plus tard, mais paradoxalement, cela ne ferait que retarder le développement du projet, et être in fine contre-productif.
-                Je me retrouverais par exemple forcé de travailler à côté pour pouvoir salarier Bleuenn qui est la première personne à m'avoir fais confiance sur ce projet, de plus sans fonds il serait impossible de recruter d'autres programmateurs pour développer une version plus stable du site.
-                Devant l'afflux de personnes qui ont créer un compte depuis hier (près de 90 personnes) je souhaite donc que celles et ceux qui souhaitent s'abonner le fasse en conscience :
-                <ul>
-                  <li><strong>du fait que la méthode n'est pas terminée !</strong> Nous continuons les enregistrements et bien que nous avons quelques semaines de podcasts d'avance nous ne pouvons pas garantir que certains évènements ne viendront pas perturber la publication de ces derniers et éventuellement bloquer l'apprendtissage des premières personnes à s'abonner.</li>
-                  <li>qu'en cas de problème avec les abonnements, les demandes de remboursement, de désincription etc... ne seront pas gérées de manière automatique, mais manuellement ce qui peut prendre une certaine durée, en fonction du nombre d'abonnés, il peut donc être interressant d'attendre que le site soit plus stable avant de se décider à s'abonner.</li>
-                  <li>et enfin du fait que j'ai décidé de diviser par deux le prix de l'abonnement en attendant que ces risques soient écartés, mais qu'en acceptant de payer vous serez considérés comme les aillant reconnus et acceptés.</li>
-                </ul>
-                Il y a donc de sérieuses raisons pour considérer attendre encore quelques mois avant de s'abonner. Mais si vous considérez avoir suffisament attendu et êtes prêts à prendre ce risque avec nous... alors je vous dis <i>ken emberr</i> pour la suite des podcasts !
-                <br>
-              </p>
-              <p style="text-align: right">
-                Alan Kersaudy
-              </p>
+              Jusqu'au dix janvier, nous vous proposons une d'acheter un abonnement à vie, à 50 € seulement !<br>
+              Les premiers retours que nous avons confirment que notre formule permet d'obtenir de meilleurs résultats qu'avec des cours hebdomadaires en présentiel et à bien moins moindre frais.
+              Ce qui n'a d'ailleurs rien d'étonnant, ici on ne suit pas des cours pour être (perpétuellement) en train d'apprendre, mais on parle, dès la première minute, et on passe les six mois suivant à s'améliorer !
+              Mais ça vous le savez déjà si vous avez fait la démo.
+              Nous avons déjà tellement confiance dans cette méthode que nous n'avons pas peur de vous la rembourser sur simple demande, un seul email à notre adresse '<i>emgav@eienn.bzh</i>' suffit pour obtenir un remboursement.
+              <br>
+              <br>
+              Actuellement, Eienn fonctionne, mais est toujours en plein développement ; comme nos abonnés, nous allons continuer à nous améliorer avec le temps.
+              A l'avenir nous souhaitons créer des méthodes pour chaque dialecte de la langue avec plus de fonctionnalités afin améliorer toujours plus l'apprentissage de la langue.<br>
+              Normalement, un abonnement coute 10€ par mois, sur six mois, mais pour Noël, nous souhaitons vous faire une offre un peut spéciale...
+              Celle d'acheter dès aujourd'hui un <strong>abonnement à vie </strong> pour toutes les méthodes à venir sur le site !<br>
+              Par exemple, si vous souhaitez attendre l'été prochain avant d'apprendre à parler breton, ou souhaitez parler un dialecte spécifique, ou les deux, obtenir cet abonnement à vie est sûrement la meilleure option, et qui sait quand elle se représentera ?!
             </div>
           </div>
         </div>

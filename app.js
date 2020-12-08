@@ -380,12 +380,13 @@ app.get('/stal', function(req, res, next) {
       price: process.env.STRIPE_PRICE,
       quantity: 1,
     }],
-    mode: 'subscription',
+    mode: 'payment',
     success_url: process.env.APP_HOST + '/penn?session_id={CHECKOUT_SESSION_ID}',
     cancel_url: process.env.APP_HOST + '/stal',
   }, function(err, session) {
     if (err) return next(err);
-    res.render('billing', {STRIPE_PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY,
+    res.render('billing', {
+      STRIPE_PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY,
       title: 'Abonnement',
       sessionId: session.id,
       subscriptionActive: req.user.subscriptionActive,
