@@ -22,6 +22,9 @@
 
         <div class="card-body">
           <% if (subscriptionActive) { %>
+            <p>
+              N'oubliez pas de vous désabonner après avoir finis les podcasts !
+            </p>
 
             <!-- Stripe cancelling subscription here -->
             <form action="/unsubscribe" method="post">
