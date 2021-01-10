@@ -380,7 +380,7 @@ app.get('/stal', function(req, res, next) {
       price: process.env.STRIPE_PRICE,
       quantity: 1,
     }],
-    mode: 'payment',
+    mode: 'subscription',
     success_url: process.env.APP_HOST + '/penn?session_id={CHECKOUT_SESSION_ID}',
     cancel_url: process.env.APP_HOST + '/stal',
   }, function(err, session) {
