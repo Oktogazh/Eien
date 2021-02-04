@@ -13,18 +13,15 @@
         <div class="card-header py-3">
           <h6 class="m-0 font-weight-bold text-primary">
               <% if (subscriptionActive) { %>
-                Vous désabonner ici en un clic !
+                Vous désabonner ici !
               <% } else { %>
-                S'abonner et se désabonner en un clic !
+                S'abonner (<strike>et se désabonner en un clic</strike>) à vie !
               <% } %>
             </h6>
         </div>
 
         <div class="card-body">
           <% if (subscriptionActive) { %>
-            <p>
-              N'oubliez pas de vous désabonner après avoir finis les podcasts !
-            </p>
 
             <!-- Stripe cancelling subscription here -->
             <form action="/unsubscribe" method="post">
@@ -34,8 +31,7 @@
 
             <% } else { %>
               <p>
-                Il est temps pour vous de découvrir à quel point vous êtes doués pour apprendre de nouvelles langues.
-                Cette méthode se base sur six mois d'enregistrements quotidien d'une dixaine de minutes. Abonnez vous pour la vie à seulement 50 € par mois.
+                Il est temps pour vous de découvrir à quel point votre talent pour apprendre de nouvelles langues !
               </p>
 
               <!-- Stripe API here -->
@@ -66,13 +62,13 @@
         <div class="col-lg-6">
           <div class="card shadow mb-4">
             <div class="card-header py-3">
-              <h6 class="m-0 font-weight-bold text-primary">Informations</h6>
+              <h6 class="m-0 font-weight-bold text-primary">Offre de Noël !</h6>
             </div>
             <div class="card-body">
-              Début Janvier 2021, notre méthode contient déjà deux mois de formation 'seulement' soit plus de 10 heures découpées en une dixaine de minutes de pratique intensive quotidienne.
-              Une nouvelle semaine de podcasts continue d'être chargée chaque semaine.
-              Nous applicons une politique de satisfait ou remboursé, donc si la méthode ne vous convient pas vous pourrez toujours nous envoyer un email et demander un rembourcement.
-              N'hésitez pas nonplus à prendre le temps de nous envoyer vos questions et remarque par email, nous avons hâte de vous lire, mais surtout, nous avons hâte de vous entrendre parler breton, alors abonnez-vous vite !
+              Notre méthode contient actuellement trois mois de formation 'semi-intensive', basée sur des podcasts d'un dixaine de minutes, semblables à ceux de la démo.
+              Nous travaillons dure pour créer plus de contenu et dans d'autres dialectes, mais si votre but est d'aquérir rapidement des bases solides vous n'avez rien à perdre à vous lancer dès aujourd'hui.
+              Nous appliquons une politique 'satisfait ou remboursé', donc si la méthode ne vous convient pas vous pourrez toujours nous envoyer un email et demander un rembourcement.
+              N'hésitez pas nonplus à prendre le temps de nous envoyer vos questions et remarques par email, nous avons hâte de vous lire, mais surtout, nous avons hâte de vous entrendre parler breton, alors abonnez-vous vite !
             </div>
           </div>
         </div>
