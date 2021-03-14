@@ -66,7 +66,6 @@ app.post('/webhooks', bodyParser.raw({type: 'application/json'}), (request, resp
         user.learning.file = 0;
         user.subscriptionId = session.subscription;
         user.customerId = session.customer;
-        user.badges.push('Diazezer');
         user.save();
       }
     });
