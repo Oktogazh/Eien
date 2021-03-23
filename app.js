@@ -21,7 +21,7 @@ dotenv.config();
 // Set your secret key. Remember to switch to your live secret key in production!
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
-mongoose.connect('mongodb://localhost:27017/mydb', {
+mongoose.connect(process.env.DB_ACCESS_STRING, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true
