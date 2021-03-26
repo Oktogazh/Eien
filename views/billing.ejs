@@ -13,9 +13,7 @@
         <div class="card-header py-3">
           <h6 class="m-0 font-weight-bold text-primary">
               <% if (subscriptionActive) { %>
-                Vous désabonner ici !<br>
-                (Attention ! Dès lors que vous décidez de vous désabonner vous perdrez tout accès à la méthode, peut importe le temps écoulé depuis le dernier prélèvement.
-                Bien sûr vous pouvez toujours demander un remboursement de l'argent que vous estimer ne pas avoir utilisé.)
+                Vous désabonner ici !
               <% } else { %>
                 S'abonner et se désabonner en un clic !
               <% } %>
@@ -24,6 +22,9 @@
 
         <div class="card-body">
           <% if (subscriptionActive) { %>
+
+                (Attention ! Dès lors que vous décidez de vous désabonner vous perdrez tout accès à la méthode, peut importe le temps écoulé depuis le dernier prélèvement.
+                Bien sûr vous pouvez toujours demander un remboursement de l'argent que vous estimer ne pas avoir utilisé.)
 
             <!-- Stripe cancelling subscription here -->
             <form action="/unsubscribe" method="post">
